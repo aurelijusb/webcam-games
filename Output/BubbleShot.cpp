@@ -1,9 +1,13 @@
 #include "BubbleShot.h"
 #include <iostream>
 
+
+#include <cv.h>
+
 using namespace std;
 
 BubbleShot::BubbleShot() {
+    previous = NULL;
     canvas = NULL;
     timer = 0;
 }
@@ -12,6 +16,9 @@ BubbleShot::~BubbleShot() {
     if (canvas) {
         cvReleaseImage(&canvas);
     }
+//    if (previous) {
+//        cvReleaseImage(&previous);
+//    }
     for (list<Bubble*>::iterator i = bubbles.begin(); i != bubbles.end(); ++i) {
         delete *i;
     }
@@ -29,6 +36,12 @@ void BubbleShot::run() {
         if (!checkKey()) {
             break;
         }
+//        if (frame) {
+//            if (!previous) {
+//                previous = cvCreateImage(cvSize(frame->width, frame->height), frame->depth, frame->nChannels);
+//            }
+//            cvCopy(frame, previous);
+//        }
     }
 }
 
@@ -74,7 +87,7 @@ void BubbleShot::organiseBubbles() {
         nr++;
     }
     deleteBubbles(bubbles);
-    
+
     if (!canvas) {
         canvas = cvCreateImage(cvSize(frame->width, frame->height), frame->depth, frame->nChannels);
     }
@@ -98,6 +111,19 @@ void BubbleShot::organiseBubbles() {
 //                debugMotion(x, y, 10, 10);
             }
         }
+    }
+//    debugMotion();
+}
+
+void BubbleShot::debugMotion() {
+    if (previous) {
+        IplImage *diff = cvCreateImage(cvSize(previous->width, previous->height), previous->depth, previous->nChannels);
+        cvSub(previous, frame, diff);
+        IplImage *diffBig = cvCreateImage(cvSize(previous->width*2, previous->height*2), previous->depth, previous->nChannels);
+        cvResize(diff, diffBig, 1);
+        cvShowImage("Diff", diffBig);
+        cvReleaseImage(&diff);
+        cvReleaseImage(&diffBig);
     }
 }
 

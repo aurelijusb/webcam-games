@@ -1,12 +1,12 @@
 #include <highgui.h>
 #include "WebCamVJ.h"
 #include "../Tracker/TrackerMotion.h"
-
 WebCamVJ::WebCamVJ() {
     for (int i=0; i < MAP_MAX * MAP_MAX; i++) {
         effects.push_back(NULL);
     }
     frame = 0;
+    bigImage = cvCreateImage(cvSize(1280, 960), 8, 3);
 }
 
 void WebCamVJ::show(IplImage *background) {
@@ -33,7 +33,22 @@ void WebCamVJ::show(IplImage *background) {
             effects[i]->apply(frame);
         }
     }
-    cvShowImage("VJ", frame);
+//    cvShowImage("VJ", frame);
+    showBig();
+}
+
+void WebCamVJ::showBig() {
+    cvZero(bigImage);
+    cvResize(frame, bigImage, CV_INTER_LINEAR);
+    cvNamedWindow("Nieko bendro", CV_WINDOW_FULLSCREEN);
+    cvShowImage("Nieko bendro", bigImage);
+    cvSetWindowProperty("Nieko bendro", CV_WND_PROP_FULLSCREEN, 1);
+    cvMoveWindow("Nieko bendro", 0, 0);
+    
+//    GdkWindow *w = gtk_widget_get_parent_window(cvGetWindowHandle("didelė"));
+//    gdk_window_fullscreen(w); 
+    
+    //TODO: unclutter -display :0.0 -idle 1
 }
 
 void WebCamVJ::add(int mapX, int mapY, effectType type, const std::string file) {
@@ -80,6 +95,9 @@ WebCamVJ::~WebCamVJ() {
     if (frame) {
         cvReleaseImage(&frame);
     }
+    if (bigImage) {
+        cvReleaseImage(&bigImage);
+    }
 }
 
 #define INTESITY(x, y) { setIntensivity(x, y, getIntensity(x, y)); }
@@ -87,19 +105,19 @@ WebCamVJ::~WebCamVJ() {
 
 void WebCamVJ::run() {
     setFlip();
-    add(2, 3, image, "Data/scan0003.jpg");
-    add(5, 3, image, "Data/Hey-0036.jpg");   
+    add(2, 3, image, "Data/23.jpg");
+    add(5, 3, image, "Data/53.jpg");   
     
 //    add(0, 0, imageSequence, "Data/Sequesnce/muziejus/00089.jpg");
     
     add(3, 2, image, "Data/remejams.jpg");
     add(4, 2, image, "Data/remejams.jpg");
     
-    add(1, 4, image, "Data/DSCF1435.JPG");
-    add(6, 4, image, "Data/devyh144.jpg");
+    add(1, 4, image, "Data/14.jpg");
+    add(6, 4, image, "Data/64.jpg");
     
-    add(0, 5, image, "Data/anglas-sargas.jpg");
-    add(7, 5, image, "Data/27710_431884889223_578384223_5669248_3867169_n.jpg");
+    add(0, 5, image, "Data/05.jpg");
+    add(7, 5, image, "Data/75.jpg");
 
     
     showWindow("Motion tracker");

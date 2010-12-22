@@ -15,10 +15,12 @@ public:
     void setIntensivity(int mapX, int mapY, unsigned value);
     void setMaxIntensivity(int mapX, int mapY, unsigned value);    
 protected:
+    void showBig();
     bool onKeyPress(char c);
     int getKey(int mapX, int mapY);
     std::vector<WebCamEffect*> effects;
     IplImage *frame;
+    IplImage *bigImage;
         
 };
 

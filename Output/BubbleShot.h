@@ -30,6 +30,8 @@ protected:
     list<Bubble *> bubbles;
     IplImage *canvas;
 private:
+    IplImage *previous;
+    void debugMotion();
     int timer;
 };
 
