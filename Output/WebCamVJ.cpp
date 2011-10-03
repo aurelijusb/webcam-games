@@ -40,10 +40,9 @@ void WebCamVJ::show(IplImage *background) {
 void WebCamVJ::showBig() {
     cvZero(bigImage);
     cvResize(frame, bigImage, CV_INTER_LINEAR);
-    cvNamedWindow("Nieko bendro", CV_WINDOW_FULLSCREEN);
+    cvNamedWindow("Nieko bendro", CV_WINDOW_NORMAL);
+    cvSetWindowProperty("Nieko bendro", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
     cvShowImage("Nieko bendro", bigImage);
-    cvSetWindowProperty("Nieko bendro", CV_WND_PROP_FULLSCREEN, 1);
-    cvMoveWindow("Nieko bendro", 0, 0);
     
 //    GdkWindow *w = gtk_widget_get_parent_window(cvGetWindowHandle("didelė"));
 //    gdk_window_fullscreen(w); 
@@ -119,7 +118,8 @@ void WebCamVJ::run() {
     add(0, 5, image, "Data/05.jpg");
     add(7, 5, image, "Data/75.jpg");
 
-    
+    cvNamedWindow("Motion tracker", CV_WINDOW_NORMAL);
+    cvSetWindowProperty("Motion tracker", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
     showWindow("Motion tracker");
 }
 
