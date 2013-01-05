@@ -27,7 +27,8 @@ WebCamEffect::WebCamEffect(effectType type, const std::string file) {
             capture = cvCreateFileCapture(file.c_str());
             if (capture) {
                 frame = cvQueryFrame(capture);
-                nFrames = cvGetCaptureProperty(capture,  CV_CAP_PROP_FRAME_COUNT);
+                nFrames = cvGetCaptureProperty(capture, 
+                                               CV_CAP_PROP_FRAME_COUNT);
                 position = 0;
             }    
             break;
@@ -54,8 +55,8 @@ WebCamEffect::WebCamEffect(effectType type, const std::string file) {
 
 }
 
-//TODO: type preview
-void WebCamEffect::aboutBox(IplImage *frame, int x, int y, int width, int height) {
+void WebCamEffect::markControllAreas(IplImage *frame, int x, int y, int width,
+                                     int height) {
     CvScalar color = CV_RGB(255, 255, 255);
     if (type == oneColor) {
         if (extention == "red") {
@@ -68,8 +69,10 @@ void WebCamEffect::aboutBox(IplImage *frame, int x, int y, int width, int height
     }
     cvRectangle(frame, cvPoint(x, y), cvPoint(x + width, y + height), color, 1);
     if (type == rectangules) {
-        cvLine(frame, cvPoint(x + width / 2, y), cvPoint(x + width / 2, y + height), color);
-        cvLine(frame, cvPoint(x, y + height / 2), cvPoint(x + width, y + height / 2), color);
+        cvLine(frame, cvPoint(x + width / 2, y),
+                      cvPoint(x + width / 2, y + height), color);
+        cvLine(frame, cvPoint(x, y + height / 2),
+                      cvPoint(x + width, y + height / 2), color);
     }
 }
 
@@ -135,14 +138,18 @@ void WebCamEffect::average(IplImage* what, IplImage* where, int intensivity) {
         ptr1 = (uchar*) (what->imageData + y * what->widthStep);
         ptr2 = (uchar*) (where->imageData + y * where->widthStep);
         for( int x = 0; x < minWidth; x++) {
-            ptr2[3*x] = ptr2[3*x] * antiIntensity / 255 + ptr1[3*x] * intensivity / 255;
-            ptr2[3*x+1] = ptr2[3*x+1] * antiIntensity / 255 + ptr1[3*x+1] * intensivity / 255;
-            ptr2[3*x+2] = ptr2[3*x+2] * antiIntensity / 255 + ptr1[3*x+2] * intensivity / 255;
+            ptr2[3*x] = ptr2[3*x] * antiIntensity / 255 +
+                        ptr1[3*x] * intensivity / 255;
+            ptr2[3*x+1] = ptr2[3*x+1] * antiIntensity / 255 +
+                          ptr1[3*x+1] * intensivity / 255;
+            ptr2[3*x+2] = ptr2[3*x+2] * antiIntensity / 255 +
+                          ptr1[3*x+2] * intensivity / 255;
         }
     }
 }
 
-void WebCamEffect::rotate(IplImage* src, IplImage* dest, int angle, double factor) {
+void WebCamEffect::rotate(IplImage* src, IplImage* dest, int angle,
+                          double factor) {
     float m[6];
     CvMat M = cvMat(2, 3, CV_32F, m);
     int w = src->width;
@@ -240,27 +247,6 @@ void WebCamEffect::setIntensivity(unsigned value) {
 void WebCamEffect::setMaxIntensivity(unsigned value) {
     RANGE(value, 0, 255);
     maxIntensivity = value;
-}
-
-void WebCamEffect::saveVideoFile(const std::string videoFileName, std::string outputDir, std::string extention, int zeros) {
-    CvCapture *movie = cvCreateFileCapture( videoFileName.c_str() );
-    IplImage *frame;
-    int n = 1;
-    string fileName;
-    if (outputDir[outputDir.length() - 1] != '/') {
-        outputDir.append("/");
-    }
-    while ( 1 ) {
-        frame = cvQueryFrame(movie);
-        if (frame) {
-            fileName = outputDir + zeroFill(n) + extention;
-            cvSaveImage(fileName.c_str(), frame);
-            n++;
-        } else {
-            break;
-        }
-    }
-    cvReleaseCapture(&movie);
 }
 
 std::string WebCamEffect::zeroFill(int x, int width) {

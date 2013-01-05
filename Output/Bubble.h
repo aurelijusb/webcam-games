@@ -1,10 +1,3 @@
-/* 
- * File:   Bubble.h
- * Author: aurelijus
- *
- * Created on September 8, 2010, 5:22 PM
- */
-
 #ifndef BUBBLE_H
 #define	BUBBLE_H
 
@@ -14,6 +7,9 @@ enum BubbleState {
     dead
 };
 
+/**
+ * Animated graphical object.
+ */
 class Bubble {
 public:
     Bubble(int x, int y, int sizeX = 10, int sizeY = 10);

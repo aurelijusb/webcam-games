@@ -3,14 +3,15 @@
 #include <string.h>
 #include <string.h>
 #include <math.h>
-
 #include <iostream>
 #include "Output3D.h"
 #include "Bubble.h"
 
-#include <math.h>
-
 using namespace std;
+
+/*
+ * Initialising
+ */
 
 Output3D::Output3D(int width, int height) {
     windowWidth = width;
@@ -18,32 +19,42 @@ Output3D::Output3D(int width, int height) {
     rotationX = rotationY = rotationZ = 0;
     translateX = translateY = 0;
     translateZ = -6;
-    
     rzSpeed = 0;
     rxSpeed = 0;
 }
 
-
-void Output3D::destructAllegro() {
-//    al_destroy_display((ALLEGRO_DISPLAY *) display);
+void Output3D::initialiseGlut() {
+    char fakeParam[] = "fake";
+    char *fakeargv[] = { fakeParam, NULL };
+    int fakeargc = 1;
+    glutInit(&fakeargc, fakeargv);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
+    glutInitWindowSize(windowWidth,windowHeight);
+    glutCreateWindow("3D viewer");
 }
 
 void Output3D::initialiseOpenGl() {
     glEnable(GL_DEPTH_TEST);
     initialiseOpenGlLights();
     initialiseModel("Data/", "untitled.obj");
+    
+    glMatrixMode(GL_PROJECTION);
+    openGlPerspective(45.0f, (GLfloat) windowWidth / (GLfloat) windowHeight,
+                      0.8, 100);
+    glMatrixMode(GL_MODELVIEW);
 }
 
 
 void Output3D::initialiseOpenGlLights() {
     lightAmbient = new GLfloat[4];
-    lightAmbient[0] = lightAmbient[1] = lightAmbient[2] = lightAmbient[3] = 0;
+    lightAmbient[0] = lightAmbient[1] = lightAmbient[2] = lightAmbient[3] = 0.1;
     
     lightDiffuse = new GLfloat[4];
     lightDiffuse[0] = lightDiffuse[1] = lightDiffuse[2] = lightDiffuse[3] = 1;
     
     lightPosition = new GLfloat[4];
-    lightPosition[0] = lightPosition[1] = lightPosition[2] = 1;
+    lightPosition[0] = lightPosition[1] = 1;
+    lightPosition[2] = 5;
     lightPosition[3] = 0;
     
     glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
@@ -57,6 +68,40 @@ void Output3D::initialiseModel(const string directory, const string fileName) {
     Objects3D::importFromObj(directory, fileName, models, materials);
 }
 
+
+/*
+ * Rendering
+ */
+
+void Output3D::render() {
+    glLoadIdentity();
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+    glTranslatef(translateY, translateX, translateZ);
+    glRotatef(rotationX, 1, 0, 0);
+    glRotatef(rotationZ, 0, 0, 1);
+    glScalef(2, 2, 2);
+    for (unsigned i=0; i < models.size(); i++) {
+        models[i]->render();
+    }
+    
+    glutSwapBuffers();
+}
+
+void Output3D::openGlPerspective(float fieldOfView, float aspectRation,
+                                 float nearPlane, float farPlane) {
+    double left, right, bottom, top;
+    top = tan (fieldOfView*M_PI/360.0)*nearPlane;
+    bottom = -top;
+    left = aspectRation*bottom;
+    right = aspectRation*top;
+    glFrustum (left, right, bottom, top, nearPlane, farPlane);
+}
+
+
+/*
+ * 3D space transformation.
+ */
 
 void Output3D::setRotationX(float difference) {
     rotationX += difference;
@@ -89,76 +134,10 @@ void Output3D::idle() {
     }
 }
 
-void Output3D::render() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    openGlRender();
-    glutSwapBuffers();
-}
 
-
-void Output3D::openGlRender() {
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    openGlPerspective(45.0f, (GLfloat) windowWidth / (GLfloat) windowHeight, 0.1, 100);
-//    
-    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-//    
-    glTranslatef(0, 0, translateZ);
-    glRotatef(rotationX, 1, 0, 0);
-    glRotatef(rotationZ, 0, 0, 1);
-    openGlRenderObject();
-    
-    glutSwapBuffers();
-//    
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-}
-
-void Output3D::openGlPerspective(float fieldOfView, float aspectRation, float nearPlane, float farPlane) {
-    double left, right, bottom, top;
-    top = tan (fieldOfView*M_PI/360.0)*nearPlane;
-    bottom = -top;
-    left = aspectRation*bottom;
-    right = aspectRation*top;
-    glFrustum (left, right, bottom, top, nearPlane, farPlane);
-}
-
-void Output3D::openGlRenderObject() {
-    for (unsigned i=0; i < models.size(); i++) {
-        models[i]->render();
-    }
-}
-
-
-void Output3D::destructOpenGl() {
-    Object3D *model;
-    while (!models.empty()) {
-        model = models.back();
-        delete model;
-        models.pop_back();
-    }
-    Material *material;
-    while (!materials.empty()) {
-        material = materials.back();
-        delete material;
-        materials.pop_back();
-    }
-    delete lightAmbient;
-    delete lightDiffuse;
-}
-
-Output3D::~Output3D() {
-    destruct();
-}
-
-void Output3D::destruct() {
-    TrackerMotion::destruct();
-    destructOpenGl();
-    destructAllegro();
-}
+/*
+ * Runing and events.
+ */
 
 Output3D *Output3D::singleton = NULL;
 
@@ -172,16 +151,6 @@ void idleSingleton() {
 
 void keySingleton(unsigned char key, int x, int y) {
     Output3D::singleton->onKeyPress(key);
-}
-
-void Output3D::initialiseGlut() {
-    char fakeParam[] = "fake";
-    char *fakeargv[] = { fakeParam, NULL };
-    int fakeargc = 1;
-    glutInit( &fakeargc, fakeargv );
-    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
-    glutInitWindowSize(windowWidth,windowHeight);
-    glutCreateWindow("3D viewer");
 }
 
 void Output3D::run() {
@@ -245,4 +214,34 @@ bool Output3D::onKeyPress(char c) {
     showMap();
     
     return true;
+}
+
+/*
+ * Destruction.
+ */
+
+void Output3D::destructOpenGl() {
+    Object3D *model;
+    while (!models.empty()) {
+        model = models.back();
+        delete model;
+        models.pop_back();
+    }
+    Material *material;
+    while (!materials.empty()) {
+        material = materials.back();
+        delete material;
+        materials.pop_back();
+    }
+    delete lightAmbient;
+    delete lightDiffuse;
+}
+
+void Output3D::destruct() {
+    TrackerMotion::destruct();
+    destructOpenGl();
+}
+
+Output3D::~Output3D() {
+    destruct();
 }

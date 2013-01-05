@@ -7,12 +7,8 @@ TrackerMotion::TrackerMotion() {
         map[i] = 0;
         mapContinuous[i] = 0;
     }
+    mapOutput = NULL;
     oldFrame = 0;
-    mapOutput = cvCreateImage(cvSize(MAP_OUTPUT_STEP * MAP_MAX, MAP_OUTPUT_STEP * MAP_MAX), 8, 3);
-    D_diff = 100;
-    D_div = 20;
-    D_minus = 20;
-    
     arrowColor[0] = arrowColor[1] = arrowColor[2] = 255;
     showArrow = true;
     arrowPosition[0] = arrowPosition[1] = 0;
@@ -49,33 +45,6 @@ bool TrackerMotion::inLoop(int wait) {
     char c = cvWaitKey(wait);
     if (!onKeyPress(c)) {
         return false;
-    }
-
-    switch (c) {
-        case 'q':
-            if (D_diff > 0) {
-                D_diff--;
-            }
-            break;
-        case 'w':
-            D_diff++;
-            break;
-        case 'a':
-            if (D_div > 0) {
-                D_div--;
-            }
-            break;
-        case 's':
-            D_div++;
-            break;
-        case 'x':
-            if (D_minus > 0) {
-                D_minus--;
-            }
-            break;
-        case 'z':
-            D_minus++;
-            break;
     }
 
     if (oldFrame) {
@@ -121,11 +90,11 @@ void TrackerMotion::updateMap() {
                 }
             }
             int key = MAP_X(xBox / edgeX) + MAP_Y(yBox / edgeY);
-            map[key] = foundDifference / D_div;
+            map[key] = foundDifference / DIVISION;
             if (foundDifference > edgeX * edgeY / 3) {
                 mapContinuous[key] = 255;
             }
-            mapContinuous[key] -= D_minus;
+            mapContinuous[key] -= MINUS;
             if (mapContinuous[key] < 0) {
                 mapContinuous[key] = 0;
             }
@@ -150,29 +119,34 @@ unsigned TrackerMotion::getIntensityContinuous(int mapX, int mapY) {
 
 
 void TrackerMotion::showMap() {
-    cvZero(mapOutput);
-//    cout << endl;
+    if (mapOutput == NULL) {
+        mapOutput = cvCreateImage(cvSize(MAP_OUTPUT_STEP * MAP_MAX,
+                                         MAP_OUTPUT_STEP * MAP_MAX), 8, 3);
+    } else {
+        cvZero(mapOutput);
+    }
     for (int y = 0; y < MAP_MAX; y++) {
         for (int x = 0; x < MAP_MAX; x++) {
             int key = MAP_X(x) + MAP_Y(y);
             int color = range(map[key]);
             int color2 = range(mapContinuous[key]);
-            cvRectangle(mapOutput, cvPoint(x * MAP_OUTPUT_STEP + 2, y * MAP_OUTPUT_STEP + 2),
-                                   cvPoint((x + 1) * MAP_OUTPUT_STEP - 1, (y + 1) * MAP_OUTPUT_STEP - 1),
-                                   CV_RGB(color, color, color), -1);
-            cvRectangle(mapOutput, cvPoint(x * MAP_OUTPUT_STEP + 10, y * MAP_OUTPUT_STEP + 10),
-                                   cvPoint((x + 1) * MAP_OUTPUT_STEP - 10, (y + 1) * MAP_OUTPUT_STEP - 10),
-                                   CV_RGB(0, color2, color2), -1);
-//            cout << mapContinuous[key] << '\t';
+            cvRectangle(mapOutput,
+                cvPoint(x * MAP_OUTPUT_STEP + 2, y * MAP_OUTPUT_STEP + 2),
+                cvPoint((x + 1) * MAP_OUTPUT_STEP - 1,
+                        (y + 1) * MAP_OUTPUT_STEP - 1),
+                CV_RGB(color, color, color), -1);
+            cvRectangle(mapOutput,
+                cvPoint(x * MAP_OUTPUT_STEP + 10, y * MAP_OUTPUT_STEP + 10),
+                cvPoint((x + 1) * MAP_OUTPUT_STEP - 10,
+                        (y + 1) * MAP_OUTPUT_STEP - 10),
+                CV_RGB(0, color2, color2), -1);
         }
-//        cout << endl;
     }
-    
     cvShowImage("MAP OUTPUT", mapOutput);
 }
 
 /**
- * Checks if ther was motion in given area by given direction
+ * Checks, if their was motion in given area by given direction
  * 
  * @param y         row [0, max)
  * @param direction <- -1 | 1 -> 
@@ -180,7 +154,8 @@ void TrackerMotion::showMap() {
  * @param xMax      finishing column [min, max)
  * @return          true - motion was | false - was not
  */
-bool TrackerMotion::checkHorizontalLine(int y, int direction, int xMin, int xMax) {
+bool TrackerMotion::checkHorizontalLine(int y, int direction, int xMin,
+                                        int xMax) {
     bool passed = true;
     int key, neibhourKey;
     bool failValue, failDirection;
@@ -204,7 +179,8 @@ bool TrackerMotion::checkHorizontalLine(int y, int direction, int xMin, int xMax
         }
         key = MAP_X(x) + MAP_Y(y);
         failValue = mapContinuous[key] < maxValueDifference;
-        failDirection = direction * mapContinuous[key] > direction * mapContinuous[neibhourKey];
+        failDirection = direction * mapContinuous[key] >
+                        direction * mapContinuous[neibhourKey];
         if (failValue || failDirection) {
             passed = false;
             break;
@@ -248,8 +224,8 @@ bool TrackerMotion::checkVerticalLine(int x, int direction, int yMin, int yMax) 
         }
         key = MAP_X(x) + MAP_Y(y);
         failValue = mapContinuous[key] < maxValueDifference;
-        failDirection = direction * mapContinuous[key] > direction * mapContinuous[neibhourKey];
-//        cout << "[" << key << "] " << mapContinuous[key] << "[" << neibhourKey << "] " << mapContinuous[neibhourKey] << " D " << direction << " FD " << failDirection  << " FV " << failValue << " PS " << passed << endl;
+        failDirection = direction * mapContinuous[key] >
+                        direction * mapContinuous[neibhourKey];
         if (failValue || failDirection) {
             passed = false;
             break;
@@ -269,7 +245,8 @@ bool TrackerMotion::checkVerticalLine(int x, int direction, int yMin, int yMax) 
     return passed;
 }
 
-void TrackerMotion::setArrowProperties(short r, short g, short b, int xDiff, int yDiff, bool show) {
+void TrackerMotion::setArrowProperties(short r, short g, short b, int xDiff,
+                                       int yDiff, bool show) {
     arrowColor[0] = range(r);
     arrowColor[1] = range(g);
     arrowColor[2] = range(b);
@@ -278,7 +255,8 @@ void TrackerMotion::setArrowProperties(short r, short g, short b, int xDiff, int
     showArrow = show;
 }
 
-void TrackerMotion::drawArrow(int x1, int y1, int x2, int y2, int thickness, int cellWidth, int cellHeight) {
+void TrackerMotion::drawArrow(int x1, int y1, int x2, int y2, int thickness,
+                              int cellWidth, int cellHeight) {
     x1 = cellWidth * x1 + cellWidth / 2 + arrowPosition[0];
     y1 = cellHeight * y1 + cellHeight / 2 + arrowPosition[1];
     x2 = cellWidth * x2 + cellWidth / 2 + arrowPosition[0];
@@ -295,8 +273,10 @@ void TrackerMotion::drawArrow(int x1, int y1, int x2, int y2, int thickness, int
         } else {
             y3 = y1 + arrowLength;
         }
-        cvLine(frame, cvPoint(x1, y1), cvPoint(x2 - arrowWidth, y3), color, thickness);
-        cvLine(frame, cvPoint(x1, y1), cvPoint(x2 + arrowWidth, y3), color, thickness);
+        cvLine(frame, cvPoint(x1, y1), cvPoint(x2 - arrowWidth, y3), color,
+               thickness);
+        cvLine(frame, cvPoint(x1, y1), cvPoint(x2 + arrowWidth, y3), color,
+               thickness);
     } else {
         int x3;
         if (x1 > x2) {
@@ -304,8 +284,10 @@ void TrackerMotion::drawArrow(int x1, int y1, int x2, int y2, int thickness, int
         } else {
             x3 = x1 + arrowLength;
         }
-        cvLine(frame, cvPoint(x1, y1), cvPoint(x3, y2 - arrowWidth), color, thickness);
-        cvLine(frame, cvPoint(x1, y1), cvPoint(x3, y2 + arrowWidth), color, thickness);
+        cvLine(frame, cvPoint(x1, y1), cvPoint(x3, y2 - arrowWidth), color,
+               thickness);
+        cvLine(frame, cvPoint(x1, y1), cvPoint(x3, y2 + arrowWidth), color,
+               thickness);
     }
 }
 

@@ -3,8 +3,10 @@
 #include "WebCamEffect.h"
 #include <vector>
 #include "../Tracker/TrackerMotion.h"
-#define RANGE(variable, min, max) {if ((variable) < (min)) (variable) = (min); if ((variable > max)) (variable) = max; }
 
+/**
+ * Blends output with images.
+ */
 class WebCamVJ: public TrackerMotion {
 public:
     WebCamVJ();
@@ -15,7 +17,7 @@ public:
     void setIntensivity(int mapX, int mapY, unsigned value);
     void setMaxIntensivity(int mapX, int mapY, unsigned value);    
 protected:
-    void showBig();
+    void showFullScreen();
     bool onKeyPress(char c);
     int getKey(int mapX, int mapY);
     std::vector<WebCamEffect*> effects;

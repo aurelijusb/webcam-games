@@ -1,10 +1,14 @@
-#include <GL/gl.h>
+/*
+ * Encapsulating OpenGl material.
+ */
 
+#include <GL/gl.h>
 #include "Objects3D.h"
 
 using namespace Objects3D;
 
-Material::Material(const string &name, float ambient[], float diffuse[], float specular[], float emition[], float shininess) {
+Material::Material(const string &name, float ambient[], float diffuse[],
+                   float specular[], float emition[], float shininess) {
     this->materialName = name;
     for(int i = 0; i < 4; i++) {
         this->ambient[i] = ambient[i];

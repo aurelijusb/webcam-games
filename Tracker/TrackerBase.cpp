@@ -6,7 +6,6 @@
 
 TrackerBase::TrackerBase() {
     capture = 0;
-    debug = false;
     frame = 0;
     flip = false;
     capture = NULL;
@@ -16,9 +15,7 @@ TrackerBase::TrackerBase() {
 }
 
 TrackerBase::TrackerBase(const TrackerBase& orig) {
-    //TODO: all
     capture = orig.capture;
-    debug = orig.debug;
 }
 
 void TrackerBase::initCaptureSize() {
@@ -26,7 +23,8 @@ void TrackerBase::initCaptureSize() {
     height = cvGetCaptureProperty(capture, CV_CAP_PROP_FRAME_HEIGHT);
 }
 
-void TrackerBase::show(const string &windowName, bool (*breakOnKeyPress)(char key), int wait) {
+void TrackerBase::show(const string &windowName,
+                       bool (*breakOnKeyPress)(char key), int wait) {
     initCaptureSize();
     IplImage *sourceFrame;
     frame = cvCreateImage(cvSize(width, height), 8, 3);
@@ -49,11 +47,6 @@ void TrackerBase::show(const string &windowName, bool (*breakOnKeyPress)(char ke
 bool TrackerBase::setFlip() {
     flip = flip ? false : true;
     return flip;
-}
-
-bool TrackerBase::setDebug() {
-    debug = debug ? false : true;
-    return debug;
 }
 
 TrackerBase::~TrackerBase() {

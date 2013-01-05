@@ -1,8 +1,6 @@
-#include "BubbleShot.h"
 #include <iostream>
-
-
 #include <cv.h>
+#include "BubbleShot.h"
 
 using namespace std;
 
@@ -16,9 +14,6 @@ BubbleShot::~BubbleShot() {
     if (canvas) {
         cvReleaseImage(&canvas);
     }
-//    if (previous) {
-//        cvReleaseImage(&previous);
-//    }
     for (list<Bubble*>::iterator i = bubbles.begin(); i != bubbles.end(); ++i) {
         delete *i;
     }
@@ -28,7 +23,8 @@ BubbleShot::~BubbleShot() {
 void BubbleShot::run() {
     setFlip();
     cvNamedWindow("BubbleShot", CV_WINDOW_NORMAL);
-    cvSetWindowProperty("BubbleShot", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
+    cvSetWindowProperty("BubbleShot", CV_WND_PROP_FULLSCREEN,
+                        CV_WINDOW_FULLSCREEN);
     while (updateFrame()) {
         calculateDifferences();
         addBubbles();
@@ -38,12 +34,6 @@ void BubbleShot::run() {
         if (!checkKey()) {
             break;
         }
-//        if (frame) {
-//            if (!previous) {
-//                previous = cvCreateImage(cvSize(frame->width, frame->height), frame->depth, frame->nChannels);
-//            }
-//            cvCopy(frame, previous);
-//        }
     }
 }
 
@@ -60,7 +50,7 @@ bool BubbleShot::checkKey() {
 void BubbleShot::deleteBubbles(list<Bubble*>& container) {
     list<Bubble*>::iterator i = container.begin();
     while (i != container.end()) {
-        if (outOfRange(*i) || (*i)->isDead()) {
+        if (isOutOfRange(*i) || (*i)->isDead()) {
             container.remove(*i);
             delete *i;
             i = container.begin();
@@ -69,7 +59,7 @@ void BubbleShot::deleteBubbles(list<Bubble*>& container) {
     }
 }
 
-bool BubbleShot::outOfRange(Bubble* object) {
+bool BubbleShot::isOutOfRange(Bubble* object) {
     if ( (object->getX() < 0) ||
          (object->getY() < 0) ||
          (object->getX() >= frame->width) ||
@@ -92,41 +82,23 @@ void BubbleShot::organiseBubbles() {
     deleteBubbles(bubbles);
 
     if (!canvas) {
-        canvas = cvCreateImage(cvSize(frame->width, frame->height), frame->depth, frame->nChannels);
+        canvas = cvCreateImage(cvSize(frame->width, frame->height),
+                                      frame->depth, frame->nChannels);
     }
     cvCopy(frame, canvas);
     int diff;
     for(short x = 0; x < frame->width; x+=step) {
         for(short y = 0; y < frame->height; y+=step) {
-//            diff = 0;
-//            for (short xx = x; xx < x + step; xx++) {
-//                for (short yy = y; yy < y + step; yy++) {
-//                    diff += differences[xx + yy * frame->width];
-//                }
-//            }
             diff = differences[x + y * frame->width];
             if (diff > sensetive) {
-                for (list<Bubble*>::iterator i = bubbles.begin(); i != bubbles.end(); ++i) {
+                for (list<Bubble*>::iterator i = bubbles.begin();
+                     i != bubbles.end(); ++i) {
                     if ((*i)->isInside(x, y)) {
                         (*i)->boom();
                     }
                 }
-//                debugMotion(x, y, 10, 10);
             }
         }
-    }
-//    debugMotion();
-}
-
-void BubbleShot::debugMotion() {
-    if (previous) {
-        IplImage *diff = cvCreateImage(cvSize(previous->width, previous->height), previous->depth, previous->nChannels);
-        cvSub(previous, frame, diff);
-        IplImage *diffBig = cvCreateImage(cvSize(previous->width*2, previous->height*2), previous->depth, previous->nChannels);
-        cvResize(diff, diffBig, 1);
-        cvShowImage("Diff", diffBig);
-        cvReleaseImage(&diff);
-        cvReleaseImage(&diffBig);
     }
 }
 
@@ -134,12 +106,6 @@ void BubbleShot::paintBubbles() {
     for (list<Bubble*>::iterator i = bubbles.begin(); i != bubbles.end(); ++i) {
         (*i)->paint(canvas);
     }
-    
-    
-//    IplImage *sub = cvCreateImage(cvSize(frame->width, frame->height), frame->depth, frame->nChannels);
-//    cvSub(frame, oldFrame, sub);
-//    cvShowImage("DEBUG", sub);
-//    cvReleaseImage(&sub);
 }
 
 void BubbleShot::addBubbles() {
@@ -149,18 +115,12 @@ void BubbleShot::addBubbles() {
     timer++;
     if (timer % 14 == 0) {
         bubbles.push_back(new Bubble(sourceX, sourceY, firstSize, firstSize));
-        bubbles.push_back(new Bubble(frame->width / 4, sourceY, firstSize, firstSize));
-        bubbles.push_back(new Bubble(frame->width / 4 * 3, sourceY, firstSize, firstSize));
+        bubbles.push_back(new Bubble(frame->width / 4, sourceY, firstSize,
+                                     firstSize));
+        bubbles.push_back(new Bubble(frame->width / 4 * 3, sourceY, firstSize,
+                                     firstSize));
     }
     if (timer > 100) {
         timer = 0;
     }
 }
-
-void BubbleShot::debugMotion(int x, int y, int sizeX, int sizeY) {
-    //TODO: elipse
-    cvCircle(canvas, cvPoint(x, y), sizeX, CV_RGB(255, 0, 255), 1, 1);
-}
-
-
-

@@ -1,3 +1,7 @@
+/*
+ * Encapsulating OpenGl object.
+ */
+
 #include <iostream>
 #include <GL/gl.h>
 

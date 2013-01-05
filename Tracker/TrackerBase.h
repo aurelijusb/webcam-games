@@ -16,6 +16,38 @@
 
 #define RANGE(variable, min, max) {if ((variable) < (min)) (variable) = (min); if ((variable > max)) (variable) = max; }
 
+using namespace std;
+
+/**
+ * Basic frames capturing from WebCam.
+ */
+class TrackerBase {
+public:
+    TrackerBase();
+    TrackerBase(const TrackerBase& orig);
+    void show(const string &windowName, bool (*breakOnKeyPress)(char key),
+              int wait = 33);
+    virtual void run() = 0;
+    bool setFlip();
+    virtual ~TrackerBase();
+protected:
+    virtual void loop(const string &windowName, int wait = 33) {};
+    virtual bool needLoop() {return true;};
+    virtual bool inLoop(int wait = 33) { return true;};
+    virtual void destruct();
+    void initCaptureSize();
+    IplImage *frame;
+    struct CvCapture *capture;
+    int width;
+    int height;
+    bool flip;
+};
+
+        
+/*
+ * Utilites
+ */
+
 inline short range(int value, int from = 0, int to = 255) {
     if (value < from) {
         return from;
@@ -25,37 +57,6 @@ inline short range(int value, int from = 0, int to = 255) {
         return value;
     }
 }
-
-inline std::string stringify(int x) {
-   std::ostringstream o;
-   o << x;
-   return o.str();
-} 
-
-using namespace std;
-
-class TrackerBase {
-public:
-    TrackerBase();
-    TrackerBase(const TrackerBase& orig);
-    void show(const string &windowName, bool (*breakOnKeyPress)(char key), int wait = 33);
-    virtual void run() = 0;
-    bool setFlip();
-    bool setDebug();
-    virtual ~TrackerBase();
-protected:
-    void initCaptureSize();
-    virtual void loop(const string &windowName, int wait = 33) {};
-    virtual bool needLoop() {return true;};
-    virtual bool inLoop(int wait = 33) { return true;};
-    virtual void destruct();
-    bool flip;
-    struct CvCapture *capture;
-    IplImage *frame;
-    int width;
-    int height;
-    bool debug;
-};
 
 #endif	/* TRACKERBASE_H */
 

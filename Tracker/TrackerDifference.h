@@ -1,16 +1,11 @@
-/* 
- * File:   TrackerDifference.h
- * Author: aurelijus
- *
- * Created on September 7, 2010, 12:25 PM
- */
-
 #ifndef TRACKERDIFFERENCE_H
 #define	TRACKERDIFFERENCE_H
 
 #include "TrackerBase.h"
 
-
+/**
+ * Calculates differences between current and old frame.
+ */
 class TrackerDifference: public TrackerBase {
 public:
     TrackerDifference();

@@ -1,6 +1,6 @@
-#include "TrackerDifference.h"
 #include <math.h>
 #include <iostream>
+#include "TrackerDifference.h"
 
 using namespace std;
 
@@ -39,12 +39,11 @@ bool TrackerDifference::updateFrame() {
 void TrackerDifference::calculateDifferences() {
     for(int x = 0; x < frame->width; x+=step) {
         for(int y = 0; y < frame->height; y+=step) {
-            differences[x + y*frame->width] =   abs(CV_R(frame, x, y) - CV_R(oldFrame, x, y)) + 
-                                                abs(CV_G(frame, x, y) - CV_G(oldFrame, x, y)) +
-                                                abs(CV_B(frame, x, y) - CV_B(oldFrame, x, y));
+            differences[x + y*frame->width] =
+                    abs(CV_R(frame, x, y) - CV_R(oldFrame, x, y)) + 
+                    abs(CV_G(frame, x, y) - CV_G(oldFrame, x, y)) +
+                    abs(CV_B(frame, x, y) - CV_B(oldFrame, x, y));
 
         }
     }
 }
-
-//TODO: memory leaks

@@ -1,9 +1,7 @@
 #include <iostream>
 #include "Output/Output3D.h"
-#include "Tracker/TrackerBackGround.h"
 #include "Output/BubbleShot.h"
 #include "Output/WebCamVJ.h"
-#include "Tracker/TrackerRed.h"
 int main(int argc, char** argv) {
     TrackerBase *game = NULL;
     if (argc > 1) {

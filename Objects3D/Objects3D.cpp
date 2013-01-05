@@ -1,13 +1,19 @@
-#include "Objects3D.h"
+/*
+ * Loding OpenGl mesh and material data.
+ */
+
 #include <fstream>
 #include <iostream>
 #include <stdlib.h>
+#include "Objects3D.h"
 
 using namespace std;
 using namespace Objects3D;
 
 //TODO: many objects in one file, material per face
-void Objects3D::importFromObj(const string directory, const string fileName, vector<Object3D*> &objectStorage, vector<Material*> &materialStorage) {
+void Objects3D::importFromObj(const string directory, const string fileName,
+                             vector<Object3D*> &objectStorage,
+                             vector<Material*> &materialStorage) {
     /* Opening file */
     string fullFileName = directory + fileName;
     ifstream file;   
@@ -49,12 +55,12 @@ void Objects3D::importFromObj(const string directory, const string fileName, vec
             getline(file, buffer);
         }
     }
-    float *vertices = new float[nV * 3];            // vertextIndex * (x, y, z)
-    float *facesNormals = new float[nFN * 3];       // normalIndex * (x, y, z)
-//    float *facesTextures = new float[nT * 2];       // normalIndex * (x, y, z)
-    int *trinagles = new int[nF * 3];               // tringaleIndex * (vertex1, vertex2, vertex3)
-    int *normals = new int[nF];                     // normal per triangle-face
-//    int *texture = new int[nF];                     // texture per triangle-face
+    float *vertices = new float[nV * 3];          // vertextIndex * (x, y, z)
+    float *facesNormals = new float[nFN * 3];     // normalIndex * (x, y, z)
+//    float *facesTextures = new float[nT * 2];   // normalIndex * (x, y, z)
+    int *trinagles = new int[nF * 3];             // tringaleIndex * (v1,v2,x3)
+    int *normals = new int[nF];                   // normal per triangle-face
+//    int *texture = new int[nF];                 // texture per triangle-face
     
     /* Reading vertex and normals coordinates */
     file.clear();
@@ -68,7 +74,8 @@ void Objects3D::importFromObj(const string directory, const string fileName, vec
             file >> vertices[iV*3] >> vertices[iV*3 + 1] >> vertices[iV*3 + 2];
             iV++;
         } else if (buffer == "vn") {
-            file >> facesNormals[iFN*3] >> facesNormals[iFN*3 + 1] >> facesNormals[iFN*3 + 2];
+            file >> facesNormals[iFN*3] >> facesNormals[iFN*3 + 1] >>
+                    facesNormals[iFN*3 + 2];
             iFN++;
 //        } else if (buffer == "vt") {
 //            file >> facesTextures[iT*2] >> facesTextures[iT*2 + 1];
@@ -106,7 +113,8 @@ void Objects3D::importFromObj(const string directory, const string fileName, vec
                 RANGE(normals[iF], 0, nFN -1);
 //            } else {
 //                for (int i=0; i < 3; i++) {
-//                    file >> trinagles[iF * 3 + i] >> tmp >> texture[iF * 3 + i] >> tmp >> normals[iF];
+//                    file >> trinagles[iF * 3 + i] >> tmp >>
+//                            texture[iF * 3 + i] >> tmp >> normals[iF];
 //                    trinagles[iF * 3 + i]--;
 //                    texture[iF * 3 + i]--;
 //                    RANGE(trinagles[iF * 3 + i], 0, nV -1);
@@ -128,7 +136,8 @@ void Objects3D::importFromObj(const string directory, const string fileName, vec
     importFromMtl(directory, materialFileName, materialStorage);
     Material *material = getMaterialByName(materialStorage, materialName);
 
-    Object3D *model = new Object3D(modelName, vertices, nV, facesNormals, nFN, trinagles, nF, normals, material);
+    Object3D *model = new Object3D(modelName, vertices, nV, facesNormals,
+                                   nFN, trinagles, nF, normals, material);
     objectStorage.push_back(model);
 
 //    delete facesTextures;
@@ -136,7 +145,8 @@ void Objects3D::importFromObj(const string directory, const string fileName, vec
 }
 
 //TODO: many materials in one file
-void Objects3D::importFromMtl(const string directory, const string fileName, vector<Material*> &materialStorage) {
+void Objects3D::importFromMtl(const string directory, const string fileName,
+                              vector<Material*> &materialStorage) {
     
     /* Opening file */
     string fullFileName = directory + fileName;
@@ -187,11 +197,13 @@ void Objects3D::importFromMtl(const string directory, const string fileName, vec
     }
     file.close();
     
-    Material *material = new Material(materialName, ambient, diffuse, specular, emition, shininess);
+    Material *material = new Material(materialName, ambient, diffuse, specular,
+                                      emition, shininess);
     materialStorage.push_back(material);
 }
 
-Material *Objects3D::getMaterialByName(const vector<Material*> &materialStorage, const string &name) {
+Material *Objects3D::getMaterialByName(const vector<Material*> &materialStorage,
+                                       const string &name) {
     for (unsigned i = 0; i < materialStorage.size(); i++) {
         if (materialStorage[i]->name() == name) {
             return materialStorage[i];
