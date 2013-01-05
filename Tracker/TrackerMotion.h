@@ -1,6 +1,8 @@
 #ifndef TRACKERMOTION_H
 #define	TRACKERMOTION_H
 
+#include <string.h>
+
 #include "TrackerBase.h"
 
 #define MAP_MAX 8
@@ -11,7 +13,6 @@
 class TrackerMotion: public TrackerBase {
 public:
     TrackerMotion();
-    void showWindow(const string &windowName, int wait = 33);
     virtual ~TrackerMotion();
     
     bool checkHorizontalLine(int y, int direction = 1, int xMin = 0, int xMax = MAP_MAX);
@@ -24,7 +25,14 @@ public:
     
     IplImage *getFrame();
 protected:
+    virtual void loop(const string &windowName, int wait = 33);
+    void showWindow(const string &windowName, int wait = 33);
+    virtual bool needLoop();
+    virtual bool inLoop(int wait = 33);
+    void distroyWindow(const string &windowName);
+    virtual void destruct();
     virtual bool onKeyPress(char c);
+    void showController();
     
     short arrowColor[3];
     bool showArrow;
@@ -36,10 +44,9 @@ protected:
     
     void drawArrow(int x1, int y1, int x2, int y2, int thickness = 1, int cellWidth = 20, int cellHeight = 20);
     
-    
     int map[MAP_MAX * MAP_MAX], mapContinuous[MAP_MAX * MAP_MAX];
     IplImage *oldFrame;
-//    IplImage *mapOutput;
+    IplImage *mapOutput;
     static const short MAP_OUTPUT_STEP = 100;
     
     int maxValueDifference;
@@ -54,7 +61,8 @@ protected:
     bool failValue, failDirection;
     int x;
 
-    
+private:
+    IplImage *sourceFrame;
 };
 
 #endif	/* TRACKERMOTION_H */

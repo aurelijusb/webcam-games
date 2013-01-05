@@ -24,23 +24,22 @@ void Bubble::paint(IplImage *canvas) {
         scaleEffect -= 360;
     }
     CvPoint point = cvPoint(x, y);
-    CvPoint point1 = cvPoint(x-sizeX/2, y-sizeY/3);
-    CvPoint point2 = cvPoint(x+sizeX/2, y+sizeY/3);
-    CvPoint point3 = cvPoint(x+sizeX/2 - sizeX/5, y-sizeY/3);
     double angeX = cos((float) scaleEffect / 180 * 3.14) * 5;
     double angeY = sin((float) scaleEffect / 180 * 3.14) * 5;
     CvSize size = cvSize(round(angeX) + sizeX, round(angeY) + sizeY);
     if (state == normal) {
-        CvScalar color1 = CV_RGB(0, abs(angeX * 20), abs(angeY * 30));
-        cvRectangle(canvas, point1, point2, color1);
-        cvCircle(canvas, point, sizeX / 4, color1);
-        cvRectangle(canvas, cvPoint(point3.x - sizeX/10, point3.y - sizeY/10), cvPoint(point3.x + sizeX/10, point3.y + sizeY/10), color1, 2);
-//        CvFont font;
-//        double hScale=1.0;
-//        double vScale=1.0;
-//        int    lineWidth=1;
-//        cvInitFont(&font,CV_FONT_HERSHEY_SIMPLEX|CV_FONT_ITALIC, hScale,vScale,0,lineWidth);
-//        cvPutText (canvas, "$", cvPoint(x,y), &font, color1);
+        CvScalar color1 = CV_RGB(255, 255 - abs(angeX * 20), abs(angeY * 30));
+        CvScalar color2 = CV_RGB(255, 255 - abs(angeX * 20), abs(angeY * 30));
+        CvSize size2 = cvSize(size.width * 8 / 10, size.height * 8 / 10);
+        cvEllipse(canvas, point, size, 0, 0, 360, color1);
+        cvEllipse(canvas, point, size2, 0, 30, 120, color2);
+//        cvRectangle(canvas, cvPoint(x - sizeX / 2, y - sizeY / 2), cvPoint(x + sizeX / 2, y + sizeY / 2), color1, 2);
+        CvFont font;
+        double hScale=1.0;
+        double vScale=1.0;
+        int    lineWidth=1;
+        cvInitFont(&font,CV_FONT_HERSHEY_SIMPLEX|CV_FONT_ITALIC, hScale,vScale,0,lineWidth);
+        cvPutText (canvas, "$", cvPoint(x,y), &font, color1);
     } else if (state == exploding) {
         sizeX *= 1.8;
         sizeY *= 1.1;

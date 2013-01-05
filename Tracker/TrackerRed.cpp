@@ -74,7 +74,6 @@ void TrackerRed::showTrackable() {
                 CV_BC(trackable, x, y) = 0;
                 pointX = diffX + x;
                 pointY = diffY + y;
-                cout << "RED: " << x << 'x' << y << " diff " << diffX << "x" << diffY << " = " << pointX << 'x' << pointY << endl;
             } else if (CV_R(frame, x, y) < 150 && CV_G(frame, x, y) > 150 && CV_B(frame, x, y) < 150) {
                 CV_RC(trackable, x, y) = 0;
                 CV_GC(trackable, x, y) = 255;

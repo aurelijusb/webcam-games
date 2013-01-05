@@ -1,7 +1,7 @@
 #ifndef TRACKERBASE_H
 #define	TRACKERBASE_H
 #include <iostream>
-#include <cxtypes.h>
+//#include <cxtypes.h>
 #include <highgui.h>
 
 #define CV_R( src, x, y ) (  (unsigned short) ( *((src)->imageData + (y) * (src)->widthStep + (x) * 3 + 2) & 0x00FF )  )
@@ -39,11 +39,16 @@ public:
     TrackerBase();
     TrackerBase(const TrackerBase& orig);
     void show(const string &windowName, bool (*breakOnKeyPress)(char key), int wait = 33);
+    virtual void run() = 0;
     bool setFlip();
     bool setDebug();
     virtual ~TrackerBase();
 protected:
     void initCaptureSize();
+    virtual void loop(const string &windowName, int wait = 33) {};
+    virtual bool needLoop() {return true;};
+    virtual bool inLoop(int wait = 33) { return true;};
+    virtual void destruct();
     bool flip;
     struct CvCapture *capture;
     IplImage *frame;

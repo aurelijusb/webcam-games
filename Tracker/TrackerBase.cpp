@@ -24,7 +24,6 @@ TrackerBase::TrackerBase(const TrackerBase& orig) {
 void TrackerBase::initCaptureSize() {
     width = cvGetCaptureProperty(capture, CV_CAP_PROP_FRAME_WIDTH);
     height = cvGetCaptureProperty(capture, CV_CAP_PROP_FRAME_HEIGHT);
-    std::cout << "WIDTH: " << width << " | HEIGHT: " << height << endl;
 }
 
 void TrackerBase::show(const string &windowName, bool (*breakOnKeyPress)(char key), int wait) {
@@ -58,6 +57,10 @@ bool TrackerBase::setDebug() {
 }
 
 TrackerBase::~TrackerBase() {
+    destruct();
+}
+
+void TrackerBase::destruct() {
     if (capture) {
         cvReleaseCapture(&capture);
     }
@@ -65,6 +68,3 @@ TrackerBase::~TrackerBase() {
         cvReleaseImage(&frame);
     }
 }
-
-
-

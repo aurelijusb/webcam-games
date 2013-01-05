@@ -51,6 +51,7 @@ bool BubbleShot::checkKey() {
     char c = cvWaitKey(3);
     switch (c) {
         case 27:
+        case 'q':
             return false;
     }
     return true;

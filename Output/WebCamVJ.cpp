@@ -107,25 +107,21 @@ void WebCamVJ::run() {
     add(2, 3, image, "Data/23.jpg");
     add(5, 3, image, "Data/53.jpg");   
     
-//    add(0, 0, imageSequence, "Data/Sequesnce/muziejus/00089.jpg");
-    
-    add(3, 2, image, "Data/remejams.jpg");
-    add(4, 2, image, "Data/remejams.jpg");
-    
     add(1, 4, image, "Data/14.jpg");
     add(6, 4, image, "Data/64.jpg");
     
     add(0, 5, image, "Data/05.jpg");
     add(7, 5, image, "Data/75.jpg");
-
+    
     cvNamedWindow("Motion tracker", CV_WINDOW_NORMAL);
     cvSetWindowProperty("Motion tracker", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
-    showWindow("Motion tracker");
+    loop("Motion tracker");
 }
 
 bool WebCamVJ::onKeyPress(char c) {
     switch (c) {
         case 27:
+        case 'q':
             return false;
     }
     
@@ -144,8 +140,8 @@ bool WebCamVJ::onKeyPress(char c) {
 //        setMaxIntensivity(2, 3, 0);
         setMaxIntensivity(2, 3, 255);
         setMaxIntensivity(5, 3, 255);
-        setMaxIntensivity(3, 2, 255);
-        setMaxIntensivity(4, 2, 255);
+//        setMaxIntensivity(3, 2, 255);
+//        setMaxIntensivity(4, 2, 255);
         setMaxIntensivity(1, 4, 255);
         setMaxIntensivity(6, 4, 255);
         setMaxIntensivity(0, 5, 255);
@@ -158,8 +154,8 @@ bool WebCamVJ::onKeyPress(char c) {
 
 //    setMaxIntensivity(0, 0, 128);    
 
-    INTESITY(3, 2);
-    INTESITY(4, 2);
+//    INTESITY(3, 2);
+//    INTESITY(4, 2);
     
     INTESITY(1, 4);
     INTESITY(6, 4);

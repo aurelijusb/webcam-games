@@ -1,14 +1,14 @@
 #include <math.h>
 #include <iostream>
 #include "TrackerMotion.h"
-//#include "../Output/WebCamVJ.h"
+
 TrackerMotion::TrackerMotion() {
     for (int i = 0; i < MAP_MAX * MAP_MAX; i++) {
         map[i] = 0;
         mapContinuous[i] = 0;
     }
     oldFrame = 0;
-//    mapOutput = cvCreateImage(cvSize(MAP_OUTPUT_STEP * MAP_MAX, MAP_OUTPUT_STEP * MAP_MAX), 8, 3);
+    mapOutput = cvCreateImage(cvSize(MAP_OUTPUT_STEP * MAP_MAX, MAP_OUTPUT_STEP * MAP_MAX), 8, 3);
     D_diff = 100;
     D_div = 20;
     D_minus = 20;
@@ -20,73 +20,79 @@ TrackerMotion::TrackerMotion() {
     maxValueDifference = 20;
 }
 
-void TrackerMotion::showWindow(const string &windowName, int wait) {
-    initCaptureSize();
-    IplImage *sourceFrame;
-    frame = cvCreateImage(cvSize(width, height), 8, 3);
-    while ( cvGrabFrame(capture) ) {
-        sourceFrame = cvQueryFrame(capture);
-        if (flip) {
-            cvFlip(sourceFrame, frame, 1);
-        } else {
-            cvCopy(sourceFrame, frame);
-        }
-        char c = cvWaitKey(wait);
-        if (!onKeyPress(c)) {
+void TrackerMotion::loop(const string &windowName, int wait) {
+    showWindow(windowName, wait);
+    while ( needLoop() ) {
+        if (!inLoop(wait)) {
             break;
         }
-        
-        //FIXME:
-        switch (c) {
-            case 'q':
-                if (D_diff > 0) {
-                    D_diff--;
-                }
-                break;
-            case 'w':
-                D_diff++;
-                break;
-            case 'a':
-                if (D_div > 0) {
-                    D_div--;
-                }
-                break;
-            case 's':
-                D_div++;
-                break;
-            case 'x':
-                if (D_minus > 0) {
-                    D_minus--;
-                }
-                break;
-            case 'z':
-                D_minus++;
-                break;
-        }
-        switch(c) {
-            case 'q':
-            case 'w':
-                cout << "D DIFF: " << D_diff << endl;
-                break;
-            case 'a':
-            case 's':
-                cout << "D div : " << D_div << endl;
-                break;
-            case 'x':
-            case 'z':
-                cout << "D minus : " << D_minus << endl;
-                break;
-        }
-        
-        if (oldFrame) {
-            updateMap();
-//            showMap();
-        } else {
-            oldFrame = cvCreateImage(cvSize(frame->width, frame->height), 8, 3);
-        }
-//        cvShowImage(windowName.c_str(), frame);
-        cvCopy(frame, oldFrame);
     }
+    distroyWindow(windowName);
+}
+
+void TrackerMotion::showWindow(const string &windowName, int wait) {
+    initCaptureSize();
+    frame = cvCreateImage(cvSize(width, height), 8, 3);
+}
+
+bool TrackerMotion::needLoop() {
+    return cvGrabFrame(capture);
+}
+
+bool TrackerMotion::inLoop(int wait) {
+    sourceFrame = cvQueryFrame(capture);
+    if (flip) {
+        cvFlip(sourceFrame, frame, 1);
+    } else {
+        cvCopy(sourceFrame, frame);
+    }
+    char c = cvWaitKey(wait);
+    if (!onKeyPress(c)) {
+        return false;
+    }
+
+    switch (c) {
+        case 'q':
+            if (D_diff > 0) {
+                D_diff--;
+            }
+            break;
+        case 'w':
+            D_diff++;
+            break;
+        case 'a':
+            if (D_div > 0) {
+                D_div--;
+            }
+            break;
+        case 's':
+            D_div++;
+            break;
+        case 'x':
+            if (D_minus > 0) {
+                D_minus--;
+            }
+            break;
+        case 'z':
+            D_minus++;
+            break;
+    }
+
+    if (oldFrame) {
+        updateMap();
+    } else {
+        oldFrame = cvCreateImage(cvSize(frame->width, frame->height), 8, 3);
+    }
+    cvCopy(frame, oldFrame);
+    
+    return true;
+}
+
+void TrackerMotion::showController() {
+    cvShowImage("Controller", frame);
+}
+
+void TrackerMotion::distroyWindow(const string &windowName) {
     cvDestroyWindow(windowName.c_str());
 }
 
@@ -144,25 +150,25 @@ unsigned TrackerMotion::getIntensityContinuous(int mapX, int mapY) {
 
 
 void TrackerMotion::showMap() {
-//    cvZero(mapOutput);
+    cvZero(mapOutput);
 //    cout << endl;
-//    for (int y = 0; y < MAP_MAX; y++) {
-//        for (int x = 0; x < MAP_MAX; x++) {
-//            int key = MAP_X(x) + MAP_Y(y);
-//            int color = range(map[key]);
-//            int color2 = range(mapContinuous[key]);
-//            cvRectangle(mapOutput, cvPoint(x * MAP_OUTPUT_STEP + 2, y * MAP_OUTPUT_STEP + 2),
-//                                   cvPoint((x + 1) * MAP_OUTPUT_STEP - 1, (y + 1) * MAP_OUTPUT_STEP - 1),
-//                                   CV_RGB(color, color, color), -1);
-//            cvRectangle(mapOutput, cvPoint(x * MAP_OUTPUT_STEP + 10, y * MAP_OUTPUT_STEP + 10),
-//                                   cvPoint((x + 1) * MAP_OUTPUT_STEP - 10, (y + 1) * MAP_OUTPUT_STEP - 10),
-//                                   CV_RGB(0, color2, color2), -1);
-////            cout << mapContinuous[key] << '\t';
-//        }
-////        cout << endl;
-//    }
+    for (int y = 0; y < MAP_MAX; y++) {
+        for (int x = 0; x < MAP_MAX; x++) {
+            int key = MAP_X(x) + MAP_Y(y);
+            int color = range(map[key]);
+            int color2 = range(mapContinuous[key]);
+            cvRectangle(mapOutput, cvPoint(x * MAP_OUTPUT_STEP + 2, y * MAP_OUTPUT_STEP + 2),
+                                   cvPoint((x + 1) * MAP_OUTPUT_STEP - 1, (y + 1) * MAP_OUTPUT_STEP - 1),
+                                   CV_RGB(color, color, color), -1);
+            cvRectangle(mapOutput, cvPoint(x * MAP_OUTPUT_STEP + 10, y * MAP_OUTPUT_STEP + 10),
+                                   cvPoint((x + 1) * MAP_OUTPUT_STEP - 10, (y + 1) * MAP_OUTPUT_STEP - 10),
+                                   CV_RGB(0, color2, color2), -1);
+//            cout << mapContinuous[key] << '\t';
+        }
+//        cout << endl;
+    }
     
-//    cvShowImage("MAP OUTPUT", mapOutput);
+    cvShowImage("MAP OUTPUT", mapOutput);
 }
 
 /**
@@ -308,10 +314,15 @@ IplImage *TrackerMotion::getFrame() {
 }
 
 TrackerMotion::~TrackerMotion() {
+    destruct();
+}
+
+void TrackerMotion::destruct() {
+    TrackerBase::destruct();
     if (oldFrame) {
         cvReleaseImage(&oldFrame);
     }
-//    if (mapOutput) {
-//        cvReleaseImage(&mapOutput);
-//    }
+    if (mapOutput) {
+        cvReleaseImage(&mapOutput);
+    }
 }
