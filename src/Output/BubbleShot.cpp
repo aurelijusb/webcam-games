@@ -1,5 +1,5 @@
 #include <iostream>
-#include <cv.h>
+#include <opencv/cv.h>
 #include "BubbleShot.h"
 
 using namespace std;

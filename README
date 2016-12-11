@@ -1,0 +1,32 @@
+Author
+------
+
+Aurelijus Banelis <aurelijus@banelis.lt>
+
+Usage
+-----
+
+$ CvGames 3d        Camera based 3D object rotation
+$ CvGames bob       Motion based bubble shot game
+$ CvGames vj        Motion based image fading
+$ CvGames           See all available arguments
+
+Compiling
+---------
+
+    cd src
+    g++ main.cpp Objects3D/* Output/* Tracker/* `pkg-config --cflags --libs opencv gl` -lglut -o ../CvGames
+    
+Libraries used
+--------------
+
+    * OpenCV http://opencv.org/
+    * OpenGl http://www.opengl.org/
+    * Glut http://www.opengl.org/resources/libraries/glut/
+    
+Resources used
+--------------
+
+    Program use files in Data folder
+    WaveFront (.obj) meshes and materials are exported usign Blender
+    (blender.org).

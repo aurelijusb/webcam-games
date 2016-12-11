@@ -2,7 +2,7 @@
 #define	WEBCAMEFFECT_H
 
 #include <string>
-#include <cv.h>
+#include <opencv/cv.h>
 #define RANGE(variable, min, max) {if ((variable) < (min)) (variable) = (min); if ((variable > max)) (variable) = max; }
 
 enum effectType {

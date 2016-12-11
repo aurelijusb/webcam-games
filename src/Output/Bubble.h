@@ -1,6 +1,8 @@
 #ifndef BUBBLE_H
 #define	BUBBLE_H
 
+#include <opencv/cv.h>
+
 enum BubbleState {
     normal,
     exploding,

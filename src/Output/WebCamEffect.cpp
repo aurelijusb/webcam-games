@@ -1,4 +1,4 @@
-#include <highgui.h>
+#include <opencv/highgui.h>
 #include <iostream>
 #include "WebCamEffect.h"
 #include <string>

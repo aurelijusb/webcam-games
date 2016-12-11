@@ -1,4 +1,4 @@
-#include <cv.h>
+#include <opencv/cv.h>
 #include <iostream>
 #include <fstream>
 #include "Bubble.h"

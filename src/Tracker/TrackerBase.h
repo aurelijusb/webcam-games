@@ -2,7 +2,7 @@
 #define	TRACKERBASE_H
 #include <iostream>
 //#include <cxtypes.h>
-#include <highgui.h>
+#include <opencv/highgui.h>
 
 #define CV_R( src, x, y ) (  (unsigned short) ( *((src)->imageData + (y) * (src)->widthStep + (x) * 3 + 2) & 0x00FF )  )
 #define CV_G( src, x, y ) (  (unsigned short) ( *((src)->imageData + (y) * (src)->widthStep + (x) * 3 + 1) & 0x00FF )  )

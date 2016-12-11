@@ -1,5 +1,5 @@
 #include <iostream>
-#include <highgui.h>
+#include <opencv/highgui.h>
 #include <iostream>
 
 #include "TrackerBase.h"

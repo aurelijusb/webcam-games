@@ -1,4 +1,4 @@
-#include <highgui.h>
+#include <opencv/highgui.h>
 #include "WebCamVJ.h"
 #include "../Tracker/TrackerMotion.h"
 
