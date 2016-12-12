@@ -36,8 +36,11 @@ void Output3D::initialiseGlut() {
 void Output3D::initialiseOpenGl() {
     glEnable(GL_DEPTH_TEST);
     initialiseOpenGlLights();
-    initialiseModel("Data/", "untitled.obj");
-    
+    initialiseModel("Data/", "m1.obj");
+    initialiseModel("Data/", "m2.obj");
+    initialiseModel("Data/", "m3.obj");
+    initialiseModel("Data/", "m4.obj");
+
     glMatrixMode(GL_PROJECTION);
     openGlPerspective(45.0f, (GLfloat) windowWidth / (GLfloat) windowHeight,
                       0.8, 100);

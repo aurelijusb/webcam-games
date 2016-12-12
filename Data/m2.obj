@@ -1,6 +1,6 @@
 # Blender v2.76 (sub 0) OBJ File: 'v02.blend'
 # www.blender.org
-mtllib untitled.mtl
+mtllib m2.mtl
 o BezierCurve.001
 v -0.615723 -0.550629 0.289610
 v -0.617939 -0.550629 0.289697

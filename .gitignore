@@ -1,3 +1,6 @@
 .svn
 /history.txt
 /CVGames
+CMakeLists.txt
+cmake-build-debug
+CvGames

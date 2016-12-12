@@ -18,9 +18,10 @@ Compiling
 ```
 cd src
 g++ main.cpp Objects3D/* Output/* Tracker/* `pkg-config --cflags --libs opencv gl` -lglut -o ../CvGames
+cd ../
 ```
 
-This will genrerate `../OpenCV` executable.
+This will genrerate `./OpenCV` executable.
     
 Libraries used
 --------------
