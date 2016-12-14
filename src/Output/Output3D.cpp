@@ -50,8 +50,8 @@ void Output3D::initialiseOpenGl() {
 
 void Output3D::initialiseOpenGlLights() {
     lightAmbient = new GLfloat[4];
-    lightAmbient[0] = lightAmbient[1] = lightAmbient[2] = lightAmbient[3] = 0.1;
-    
+    lightAmbient[0] = lightAmbient[1] = lightAmbient[2] = lightAmbient[3] = 0.9;
+
     lightDiffuse = new GLfloat[4];
     lightDiffuse[0] = lightDiffuse[1] = lightDiffuse[2] = lightDiffuse[3] = 1;
     
@@ -79,6 +79,7 @@ void Output3D::initialiseModel(const string directory, const string fileName) {
 void Output3D::render() {
     glLoadIdentity();
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+    glClearColor(252 / 255.0f, 122 / 255.0f, 45 / 255.0f, 255 / 255.0f);
 
     glTranslatef(translateY, translateX, translateZ);
     glRotatef(rotationX, 1, 0, 0);

@@ -38,7 +38,7 @@ void Bubble::paint(IplImage *canvas) {
         int    lineWidth=1;
         cvInitFont(&font,CV_FONT_HERSHEY_SIMPLEX|CV_FONT_ITALIC, hScale, vScale,
                    0, lineWidth);
-        cvPutText (canvas, "$", cvPoint(x,y), &font, color1);
+//        cvPutText (canvas, "$", cvPoint(x,y), &font, color1);
     } else if (state == exploding) {
         sizeX *= 1.8;
         sizeY *= 1.1;
