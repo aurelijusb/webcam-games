@@ -2,6 +2,8 @@
 #include "Output/Output3D.h"
 #include "Output/BubbleShot.h"
 #include "Output/WebCamVJ.h"
+#include "Output/DebugView.h"
+
 int main(int argc, char** argv) {
     TrackerBase *game = NULL;
     if (argc > 1) {
@@ -11,6 +13,8 @@ int main(int argc, char** argv) {
             game = new BubbleShot();
         } else if (strcmp(argv[1], "vj") == 0) {
             game = new WebCamVJ();
+        } else if (strcmp(argv[1], "debug") == 0) {
+            game = new DebugView(100.0, 200.0);
         }
     }
     cout << "(C) Aurelijus Banelis <aurelijus@banelis.lt>" << endl;
@@ -20,9 +24,10 @@ int main(int argc, char** argv) {
         delete game;
     } else {
         cout << "Usage game [argument].\nArguments:" << endl;
-        cout << "  3d   Camera based 3D object rotation" << endl;
-        cout << "  bub  Motion based bubble shot game" << endl;
-        cout << "  vj   Motion based image fading" << endl;
+        cout << "  3d    Camera based 3D object rotation" << endl;
+        cout << "  bub   Motion based bubble shot game" << endl;
+        cout << "  vj    Motion based image fading" << endl;
+        cout << "  debug Illustrating how internals work" << endl;
     }
     return 0;
 }

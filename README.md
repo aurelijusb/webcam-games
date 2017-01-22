@@ -15,12 +15,19 @@ Usage
 Compiling
 ---------
 
+Use GNU make
+
 ```
-cd src
-g++ main.cpp Objects3D/* Output/* Tracker/* `pkg-config --cflags --libs opencv gl` -lglut -o ../CvGames
+make
 ```
 
-This will genrerate `../OpenCV` executable.
+or compile directly
+
+```
+g++ src/main.cpp src/Objects3D/* src/Output/* src/Tracker/* `pkg-config --cflags --libs opencv gl` -lglut -o CvGames
+```
+
+This will genrerate `OpenCV` executable.
     
 Libraries used
 --------------
