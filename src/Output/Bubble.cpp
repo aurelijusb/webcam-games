@@ -32,13 +32,6 @@ void Bubble::paint(IplImage *canvas) {
         CvSize size2 = cvSize(size.width * 8 / 10, size.height * 8 / 10);
         cvEllipse(canvas, point, size, 0, 0, 360, color1);
         cvEllipse(canvas, point, size2, 0, 30, 120, color2);
-        CvFont font;
-        double hScale=1.0;
-        double vScale=1.0;
-        int    lineWidth=1;
-        cvInitFont(&font,CV_FONT_HERSHEY_SIMPLEX|CV_FONT_ITALIC, hScale, vScale,
-                   0, lineWidth);
-        cvPutText (canvas, "$", cvPoint(x,y), &font, color1);
     } else if (state == exploding) {
         sizeX *= 1.8;
         sizeY *= 1.1;
@@ -105,4 +98,8 @@ void Bubble::boom() {
 
 bool Bubble::isDead() {
     return state == dead;
+}
+
+bool Bubble::isAlive() {
+    return state == normal;
 }

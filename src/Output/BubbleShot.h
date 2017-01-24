@@ -21,12 +21,15 @@ private:
     void paintBubbles();
     void addBubbles();
     void deleteBubbles(list<Bubble*>& container);
+    void drawScore();
     bool isOutOfRange(Bubble *object);
     static const int sensetive = 300;
     list<Bubble *> bubbles;
     IplImage *canvas;
     IplImage *previous;
     int timer;
+    long released;
+    long exploded;
 };
 
 

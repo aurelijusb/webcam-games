@@ -25,6 +25,7 @@ public:
     bool isInside(int x, int y);
     void boom();
     bool isDead();
+    bool isAlive();
 protected:
     int x;
     int y;
