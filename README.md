@@ -27,6 +27,14 @@ or compile directly
 g++ src/main.cpp src/Objects3D/* src/Output/* src/Tracker/* `pkg-config --cflags --libs opencv gl` -lglut -o CvGames
 ```
 
+or use `cmake` (CLion IDE also supports it):
+
+```
+mkdir cmake-build-debug
+cd cmake-build-debug
+cmake ../
+```
+
 This will genrerate `OpenCV` executable.
     
 Libraries used
