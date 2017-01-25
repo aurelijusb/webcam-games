@@ -89,7 +89,7 @@ void BubbleShot::organiseBubbles() {
     for (list<Bubble*>::iterator i = bubbles.begin(); i != bubbles.end(); ++i) {
         (*i)->translate(rand() % 15 - 7, -rand() % 2 - 3);
         if (timer % 3 == 0) {
-            (*i)->scale(1.1, 1.1);
+            (*i)->scale(1.05, 1.05);
         }
         nr++;
     }
