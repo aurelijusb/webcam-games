@@ -130,8 +130,8 @@ void BubbleShot::paintBubbles() {
 
 
 void BubbleShot::drawScore() {
-    int score = (int) ((double) exploded / released * 128);
-    CvScalar color = CV_RGB(255 - score, score + 128, score + 128);
+    int score256 = (int) ((double) exploded / released * 128);
+    CvScalar color = CV_RGB(255 - score256, score256 + 128, score256 + 128);
     CvFont font;
     double hScale=0.5;
     double vScale=0.5;
@@ -140,7 +140,43 @@ void BubbleShot::drawScore() {
                0, lineWidth);
     cvPutText(canvas, IntToString(released), cvPoint(20, 20), &font, color);
     cvPutText(canvas, IntToString(exploded), cvPoint(canvas->width - 80, 20), &font, color);
+
+    int x = (int) (canvas->width / (double) released * exploded);
+    int width = 40;
+    int height = 5;
+    cvRectangle(canvas, cvPoint(x - width/2, 0), cvPoint(x + width/2, height), color, CV_FILLED, 8, 0);
+    cvLine(canvas, cvPoint(x, height / 2), cvPoint(canvas->width / 2, height / 2), color, 1, 8, 0);
+
+
+    if (released > 0) {
+        double score = exploded / (double) released;
+        if (0.4 < score && score < 0.6) {
+            drawHappySmile(color, 20, 20);
+        } else {
+            drawSadSmile(color, 20, 20);
+        }
+    }
 }
+
+void BubbleShot::drawHappySmile(const CvScalar& color, int top, int size) {
+    CvSize big = cvSize(size, size);
+    CvSize small = cvSize(size, size / 2);
+    CvPoint point1 = cvPoint(canvas->width / 2, top);
+    cvEllipse(canvas, point1, small, 0, 200, 230, color, 2);
+    cvEllipse(canvas, point1, small, 0, 310, 340, color, 2);
+    cvEllipse(canvas, point1, big, 0, 30, 150, color, 2);
+}
+
+void BubbleShot::drawSadSmile(const CvScalar& color, int top, int size) {
+    CvSize big = cvSize(size, size);
+    CvSize small = cvSize(size, size / 2);
+    CvPoint point1 = cvPoint(canvas->width / 2, top);
+    CvPoint point2 = cvPoint(canvas->width / 2, top + (size * 1.5));
+    cvEllipse(canvas, point1, small, 0, 200, 230, color, 2);
+    cvEllipse(canvas, point1, small, 0, 310, 340, color, 2);
+    cvEllipse(canvas, point2, big, 180, 30, 150, color, 2);
+}
+
 
 void BubbleShot::addBubbles() {
     int sourceX = frame->width / 2;

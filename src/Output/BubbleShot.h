@@ -28,8 +28,12 @@ private:
     IplImage *canvas;
     IplImage *previous;
     int timer;
-    long released;
-    long exploded;
+    int released;
+    int exploded;
+
+    void drawHappySmile(const CvScalar &color, int top, int size);
+
+    void drawSadSmile(const CvScalar &color, int top, int size);
 };
 
 
