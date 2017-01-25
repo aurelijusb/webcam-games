@@ -18,6 +18,10 @@ void Objects3D::importFromObj(const string directory, const string fileName,
     string fullFileName = directory + fileName;
     ifstream file;   
     file.open(fullFileName.c_str(), ios::in | ios::binary);
+    if (!file.good()) {
+        cout << "Error reading file: " << directory << fileName << endl;
+        return;
+    }
     string buffer, buffer2;
 
     /* Getting counts and textual properties */

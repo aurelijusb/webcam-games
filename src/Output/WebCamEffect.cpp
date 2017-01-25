@@ -27,6 +27,9 @@ WebCamEffect::WebCamEffect(effectType type, const std::string file) {
             capture = cvCreateFileCapture(file.c_str());
             if (capture) {
                 frame = cvQueryFrame(capture);
+                if (frame == NULL) {
+                    cout << "Error loading image: " << file << endl;
+                }
                 nFrames = cvGetCaptureProperty(capture, 
                                                CV_CAP_PROP_FRAME_COUNT);
                 position = 0;
@@ -34,6 +37,9 @@ WebCamEffect::WebCamEffect(effectType type, const std::string file) {
             break;
         case image:
             frame = cvLoadImage(file.c_str());
+            if (frame == NULL) {
+                cout << "Error loading image: " << file << endl;
+            }
             break;
         case imageSequence:
         {
@@ -45,6 +51,9 @@ WebCamEffect::WebCamEffect(effectType type, const std::string file) {
             position = 1;
             string fullName = directory + zeroFill(position) + extention;
             frame = cvLoadImage(fullName.c_str());
+            if (frame == NULL) {
+                cout << "Error loading image: " << fullName << endl;
+            }
             break;
         }
         case oneColor:
