@@ -56,6 +56,8 @@ private:
     
     void destructOpenGl();
     virtual void destruct();
+
+    bool windowPositioned = false;
 };
 
 

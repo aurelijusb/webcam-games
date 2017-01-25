@@ -30,6 +30,7 @@ void Output3D::initialiseGlut() {
     glutInit(&fakeargc, fakeargv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutInitWindowSize(windowWidth,windowHeight);
+    glutInitWindowPosition(0, 0);
     glutCreateWindow("3D viewer");
 }
 
@@ -128,6 +129,11 @@ void Output3D::idle() {
     if (TrackerMotion::needLoop()) {
         if (TrackerMotion::inLoop(1)) {
             showController();
+            if (!windowPositioned) {
+                cvMoveWindow("Controller", windowWidth, 0);
+                cvNamedWindow("Controller", CV_WINDOW_OPENGL);
+                windowPositioned = true;
+            }
         } else {
             destruct();
         }
@@ -211,7 +217,7 @@ bool Output3D::onKeyPress(char c) {
     setRotationX(rxSpeed);
     render();
     
-    showMap();
+//    showMap();
     
     return true;
 }
