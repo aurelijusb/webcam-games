@@ -7,6 +7,7 @@ using namespace std;
 DebugView::DebugView(int webCamDevice, double threshold1, double threshold2): TrackerDifference(webCamDevice) {
     canvasDifference = NULL;
     canvasEdges = NULL;
+    screen = Canny;
     this->threshold1 = threshold1;
     this->threshold2 = threshold2;
 }
@@ -22,13 +23,20 @@ DebugView::~DebugView() {
 
 void DebugView::run() {
     setFlip();
-    cvNamedWindow("DebugView: Difference", CV_WINDOW_NORMAL);
-    cvNamedWindow("DebugView: Canny", CV_WINDOW_NORMAL);
+    string windowName = "DebugView";
+    cvNamedWindow(windowName.c_str(), CV_WINDOW_NORMAL);
+    cvSetWindowProperty(windowName.c_str(), CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
+    cout << "Use arrow keys (Up/Down) to change debug view" << endl;
     while (updateFrame()) {
-        updateDifference();
-        cvShowImage("DebugView: Difference", canvasDifference);
-        updateEdges();
-        cvShowImage("DebugView: Canny", canvasEdges);
+        switch (screen) {
+            case Canny:
+                updateDifference();
+                cvShowImage(windowName.c_str(), canvasDifference);
+                break;
+            default:
+                updateEdges();
+                cvShowImage(windowName.c_str(), canvasEdges);
+        }
         if (!checkKey()) {
             break;
         }
@@ -37,7 +45,21 @@ void DebugView::run() {
 
 bool DebugView::checkKey() {
     char c = cvWaitKey(1);
+    const char KEY_DOWN = 84;
+    const char KEY_UP = 82;
     switch (c) {
+        case KEY_DOWN:
+            screen++;
+            if (screen > TimeHistory) {
+                screen = Canny;
+            }
+            break;
+        case KEY_UP:
+            screen -= 1;
+            if (screen < 0) {
+                screen = TimeHistory;
+            }
+            break;
         case 27:
         case 'q':
             return false;
