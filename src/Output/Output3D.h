@@ -21,7 +21,7 @@ using namespace Objects3D;
  */
 class Output3D: public TrackerMotion {
 public:
-    Output3D(int width = 800, int height = 600);
+    Output3D(int webCamDevice, int width = 800, int height = 600);
     ~Output3D();
     void run();
     void render();

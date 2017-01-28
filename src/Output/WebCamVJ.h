@@ -9,7 +9,7 @@
  */
 class WebCamVJ: public TrackerMotion {
 public:
-    WebCamVJ();
+    WebCamVJ(int webCamDevice);
     ~WebCamVJ();
     void run();
     void show(IplImage *background);

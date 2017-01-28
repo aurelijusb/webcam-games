@@ -26,6 +26,8 @@ set(SOURCE_FILES
         src/Tracker/TrackerDifference.h
         src/Tracker/TrackerMotion.cpp
         src/Tracker/TrackerMotion.h
+        src/Helpers/cli.h
+        src/Helpers/cli.cpp
         src/main.cpp
         README.md)
 

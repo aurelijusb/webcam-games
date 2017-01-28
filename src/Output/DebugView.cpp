@@ -4,7 +4,7 @@
 
 using namespace std;
 
-DebugView::DebugView(double threshold1, double threshold2) {
+DebugView::DebugView(int webCamDevice, double threshold1, double threshold2): TrackerDifference(webCamDevice) {
     canvasDifference = NULL;
     canvasEdges = NULL;
     this->threshold1 = threshold1;

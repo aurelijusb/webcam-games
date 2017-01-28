@@ -4,7 +4,7 @@
 
 using namespace std;
 
-TrackerDifference::TrackerDifference() {
+TrackerDifference::TrackerDifference(int webCamDevice): TrackerBase(webCamDevice) {
     initCaptureSize();
     differences = new unsigned short[width*height];
     oldFrame = NULL;

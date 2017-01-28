@@ -13,7 +13,7 @@
  */
 class TrackerMotion: public TrackerBase {
 public:
-    TrackerMotion();
+    TrackerMotion(int webCamDevice);
     virtual ~TrackerMotion();
     
     bool checkHorizontalLine(int y, int direction = 1, int xMin = 0,

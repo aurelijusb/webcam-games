@@ -9,7 +9,7 @@
  */
 class DebugView: public TrackerDifference {
 public:
-    DebugView(double threshold1, double threshold2);
+    DebugView(int webCamDevice, double threshold1, double threshold2);
     virtual ~DebugView();
     void run();
 private:

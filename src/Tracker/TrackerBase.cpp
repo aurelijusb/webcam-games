@@ -4,13 +4,13 @@
 
 #include "TrackerBase.h"
 
-TrackerBase::TrackerBase() {
+TrackerBase::TrackerBase(int webCamDevice) {
     capture = 0;
     frame = 0;
     flip = false;
     capture = NULL;
     while (!capture) {
-        capture = cvCreateCameraCapture(0);
+        capture = cvCreateCameraCapture(webCamDevice);
     }
 }
 

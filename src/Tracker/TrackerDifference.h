@@ -8,7 +8,7 @@
  */
 class TrackerDifference: public TrackerBase {
 public:
-    TrackerDifference();
+    TrackerDifference(int webCamDevice);
     virtual ~TrackerDifference();
     bool updateFrame();
     static const int step = 8;

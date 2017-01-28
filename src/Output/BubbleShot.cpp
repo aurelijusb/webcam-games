@@ -15,7 +15,7 @@ const char * IntToString (int a)
     return temp.str().c_str();
 }
 
-BubbleShot::BubbleShot() {
+BubbleShot::BubbleShot(int webCamDevice): TrackerDifference(webCamDevice) {
     previous = NULL;
     canvas = NULL;
     timer = 0;

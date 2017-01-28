@@ -5,7 +5,7 @@
 #define INTESITY(x, y) { setIntensivity(x, y, getIntensity(x, y)); }
 #define MAX_INTESITY(x, y) { setMaxIntensivity(x, y, getIntensity(x, y)); }
 
-WebCamVJ::WebCamVJ() {
+WebCamVJ::WebCamVJ(int webCamDevice): TrackerMotion(webCamDevice) {
     for (int i=0; i < MAP_MAX * MAP_MAX; i++) {
         effects.push_back(NULL);
     }

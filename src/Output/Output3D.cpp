@@ -13,7 +13,7 @@ using namespace std;
  * Initialising
  */
 
-Output3D::Output3D(int width, int height) {
+Output3D::Output3D(int webCamDevice, int width, int height): TrackerMotion(webCamDevice) {
     windowWidth = width;
     windowHeight = height;
     rotationX = rotationY = rotationZ = 0;

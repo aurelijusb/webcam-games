@@ -23,7 +23,7 @@ using namespace std;
  */
 class TrackerBase {
 public:
-    TrackerBase();
+    TrackerBase(int webCamDevice);
     TrackerBase(const TrackerBase& orig);
     void show(const string &windowName, bool (*breakOnKeyPress)(char key),
               int wait = 33);

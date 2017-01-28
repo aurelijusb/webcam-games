@@ -12,7 +12,7 @@
  */
 class BubbleShot: public TrackerDifference {
 public:
-    BubbleShot();
+    BubbleShot(int webCamDevice);
     virtual ~BubbleShot();
     void run();
 private:

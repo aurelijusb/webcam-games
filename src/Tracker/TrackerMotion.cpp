@@ -2,7 +2,7 @@
 #include <iostream>
 #include "TrackerMotion.h"
 
-TrackerMotion::TrackerMotion() {
+TrackerMotion::TrackerMotion(int webCamDevice): TrackerBase(webCamDevice) {
     for (int i = 0; i < MAP_MAX * MAP_MAX; i++) {
         map[i] = 0;
         mapContinuous[i] = 0;
