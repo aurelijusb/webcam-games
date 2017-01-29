@@ -39,7 +39,8 @@ protected:
     virtual void destruct();
     
     void showController();
-    void showMap();
+    void showMap(string name);
+    IplImage *oldFrame;
 private:
     static const int DIFFERENCE = 100;
     static const int DIVISION = 20;
@@ -56,7 +57,6 @@ private:
     
     int map[MAP_MAX * MAP_MAX];
     int mapContinuous[MAP_MAX * MAP_MAX];
-    IplImage *oldFrame;
     IplImage *mapOutput;
     IplImage *sourceFrame;
     int maxValueDifference;

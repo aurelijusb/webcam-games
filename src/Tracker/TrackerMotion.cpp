@@ -36,6 +36,10 @@ bool TrackerMotion::needLoop() {
 }
 
 bool TrackerMotion::inLoop(int wait) {
+    if (!oldFrame) {
+        oldFrame = cvCreateImage(cvSize(frame->width, frame->height), 8, 3);
+    }
+    cvCopy(frame, oldFrame);
     sourceFrame = cvQueryFrame(capture);
     if (flip) {
         cvFlip(sourceFrame, frame, 1);
@@ -49,11 +53,7 @@ bool TrackerMotion::inLoop(int wait) {
 
     if (oldFrame) {
         updateMap();
-    } else {
-        oldFrame = cvCreateImage(cvSize(frame->width, frame->height), 8, 3);
     }
-    cvCopy(frame, oldFrame);
-    
     return true;
 }
 
@@ -118,7 +118,7 @@ unsigned TrackerMotion::getIntensityContinuous(int mapX, int mapY) {
 }
 
 
-void TrackerMotion::showMap() {
+void TrackerMotion::showMap(string name) {
     if (mapOutput == NULL) {
         mapOutput = cvCreateImage(cvSize(MAP_OUTPUT_STEP * MAP_MAX,
                                          MAP_OUTPUT_STEP * MAP_MAX), 8, 3);
@@ -142,7 +142,7 @@ void TrackerMotion::showMap() {
                 CV_RGB(0, color2, color2), -1);
         }
     }
-    cvShowImage("MAP OUTPUT", mapOutput);
+    cvShowImage(name.c_str(), mapOutput);
 }
 
 /**
