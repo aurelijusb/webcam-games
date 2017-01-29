@@ -42,17 +42,17 @@ void DebugView::loop(const string &windowName, int wait) {
             switch (screen) {
                 case Canny:
                     updateEdges();
-                    cvShowImage(windowName.c_str(), canvasEdges);
+                    fullScreen(windowName.c_str(), canvasEdges);
                     break;
                 case Difference:
                     updateDifference();
-                    cvShowImage(windowName.c_str(), canvasDifference);
+                    fullScreen(windowName.c_str(), canvasDifference);
                     break;
                 case TimeHistory:
                     showMap(windowName);
                     break;
                 default:
-                    cvShowImage(windowName.c_str(), frame);
+                    fullScreen(windowName.c_str(), frame);
 
             }
         } else {

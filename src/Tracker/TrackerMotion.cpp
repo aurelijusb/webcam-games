@@ -142,7 +142,7 @@ void TrackerMotion::showMap(string name) {
                 CV_RGB(0, color2, color2), -1);
         }
     }
-    cvShowImage(name.c_str(), mapOutput);
+    fullScreen(name.c_str(), mapOutput);
 }
 
 /**

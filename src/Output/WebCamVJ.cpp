@@ -114,9 +114,7 @@ void WebCamVJ::show(IplImage *background) {
 void WebCamVJ::showFullScreen() {
     cvZero(bigImage);
     cvResize(frame, bigImage, CV_INTER_LINEAR);
-    cvNamedWindow("Images", CV_WINDOW_NORMAL);
-    cvSetWindowProperty("Images", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
-    cvShowImage("Images", bigImage);
+    fullScreen("Images", bigImage);
 }
 
 

@@ -35,16 +35,13 @@ BubbleShot::~BubbleShot() {
 
 void BubbleShot::run() {
     setFlip();
-    cvNamedWindow("BubbleShot", CV_WINDOW_NORMAL);
-    cvSetWindowProperty("BubbleShot", CV_WND_PROP_FULLSCREEN,
-                        CV_WINDOW_FULLSCREEN);
     while (updateFrame()) {
         calculateDifferences();
         addBubbles();
         organiseBubbles();
         paintBubbles();
         drawScore();
-        cvShowImage("BubbleShot", canvas);
+        fullScreen("BubbleShot", canvas);
         if (!checkKey()) {
             break;
         }

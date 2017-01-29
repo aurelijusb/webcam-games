@@ -31,6 +31,7 @@ public:
     bool setFlip();
     virtual ~TrackerBase();
 protected:
+    void fullScreen(string windowName, IplImage* image);
     virtual void loop(const string &windowName, int wait = 33) {};
     virtual bool needLoop() {return true;};
     virtual bool inLoop(int wait = 33) { return true;};
@@ -41,6 +42,8 @@ protected:
     int width;
     int height;
     bool flip;
+private:
+    IplImage *displayFullScreen;
 };
 
         

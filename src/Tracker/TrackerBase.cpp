@@ -9,8 +9,14 @@ TrackerBase::TrackerBase(int webCamDevice) {
     frame = 0;
     flip = false;
     capture = NULL;
+    displayFullScreen = NULL;
+
+    static const int MAX_WIDTH_RESOLUTION = 1920;
+    static const int MAX_HEIGHT_RESOLUTION = 1080;
     while (!capture) {
         capture = cvCreateCameraCapture(webCamDevice);
+        cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_WIDTH, MAX_WIDTH_RESOLUTION);
+        cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_HEIGHT, MAX_HEIGHT_RESOLUTION);
     }
 }
 
@@ -42,6 +48,44 @@ void TrackerBase::show(const string &windowName,
         cvShowImage(windowName.c_str(), frame);
     }
     cvDestroyWindow(windowName.c_str());
+}
+
+void TrackerBase::fullScreen(string windowName, IplImage* image)
+{
+    cvNamedWindow(windowName.c_str(), CV_WINDOW_NORMAL);
+    cvSetWindowProperty(windowName.c_str(), CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
+    double windowAspectRatio = cvGetWindowProperty(windowName.c_str(), CV_WND_PROP_ASPECTRATIO);
+    double imageAspectRatio = image->width / (double) image->height;
+    if (windowAspectRatio == imageAspectRatio) {
+        cvShowImage(windowName.c_str(), image);
+    } else {
+        int width = image->width;
+        int height = image->height;
+        if (windowAspectRatio > imageAspectRatio) {
+            width = (int) (windowAspectRatio * image->height);
+        } else {
+            height = (int) (image->width / windowAspectRatio);
+        }
+        if (
+                !displayFullScreen
+                || displayFullScreen->width != width || displayFullScreen->height != height
+                || displayFullScreen->nChannels != image->nChannels || displayFullScreen->depth != image->depth
+                || !image->width || !image->height
+                ) {
+            if (displayFullScreen) {
+                cvReleaseImage(&displayFullScreen);
+            }
+            displayFullScreen = cvCreateImage(cvSize(width, height), image->depth, image->nChannels);
+        }
+        int x = (width - image->width) / 2;
+        int y = (height - image->height) / 2;
+        CvRect rect = cvRect(x, y, image->width, image->height);
+        cvSet(displayFullScreen, CV_RGB(0,0,0));
+        cvSetImageROI(displayFullScreen, rect);
+        cvCopy(image, displayFullScreen);
+        cvResetImageROI(displayFullScreen);
+        cvShowImage(windowName.c_str(), displayFullScreen);
+    }
 }
 
 bool TrackerBase::setFlip() {
