@@ -11,12 +11,8 @@ TrackerBase::TrackerBase(int webCamDevice) {
     capture = NULL;
     displayFullScreen = NULL;
 
-    static const int MAX_WIDTH_RESOLUTION = 1920;
-    static const int MAX_HEIGHT_RESOLUTION = 1080;
     while (!capture) {
         capture = cvCreateCameraCapture(webCamDevice);
-        cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_WIDTH, MAX_WIDTH_RESOLUTION);
-        cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_HEIGHT, MAX_HEIGHT_RESOLUTION);
     }
 }
 
