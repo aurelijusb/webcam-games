@@ -130,8 +130,9 @@ void Output3D::idle() {
         if (TrackerMotion::inLoop(1)) {
             showController();
             if (!windowPositioned) {
-                cvMoveWindow("Controller", windowWidth, 0);
-                cvNamedWindow("Controller", CV_WINDOW_OPENGL);
+                string controller = "Controller";
+                cvMoveWindow(controller.c_str(), windowWidth, 0);
+                cvResizeWindow(controller.c_str(), windowWidth, windowHeight);
                 windowPositioned = true;
             }
         } else {

@@ -11,11 +11,13 @@ using namespace std;
 int main(int argc, char** argv) {
     Cli cli(argc, argv);
     int camera = cli.getInt("camera", 0);
+    int width = cli.getInt("width", 800);
+    int height = cli.getInt("height", 600);
     TrackerBase *game = NULL;
     if (argc > 1) {
         string gameName = argv[1];
         if (gameName == "3d") {
-            game = new Output3D(camera);
+            game = new Output3D(camera, width, height);
         } else if (gameName == "bub") {
             game = new BubbleShot(camera);
         } else if (gameName == "vj") {
@@ -40,6 +42,8 @@ int main(int argc, char** argv) {
         cout << endl;
         cout << "Available options:" << endl;
         cout << "  --camera=0    Which WebCam device to use" << endl;
+        cout << "  --width=800   3D view size: width" << endl;
+        cout << "  --height=600  3D view size: height" << endl;
     }
     return 0;
 }
