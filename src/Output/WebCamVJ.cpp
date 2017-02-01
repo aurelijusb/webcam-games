@@ -20,19 +20,9 @@ WebCamVJ::WebCamVJ(int webCamDevice): TrackerMotion(webCamDevice) {
 
 void WebCamVJ::run() {
     setFlip();
-    add(2, 3, image, "../Data/img_1169.jpg");
-    add(5, 3, image, "../Data/img_1196.jpg");
+    add(0, 3, image, "../Data/img_1449.jpg");
+    add(7, 3, image, "../Data/img_1196.jpg");
     
-    add(1, 4, image, "../Data/img_1449.jpg");
-    add(6, 4, image, "../Data/img_1449.jpg");
-    
-    add(0, 5, image, "../Data/img_9335-mantiuk.jpg");
-    add(7, 5, image, "../Data/img_9685.jpg");
-
-    add(0, 0, oneColor, "red");
-    add(7, 0, oneColor, "green");
-
-    add(3, 0, rectangules, "");
     add(4, 0, rectangules, "");
 
     cvNamedWindow("Motion tracker", CV_WINDOW_NORMAL);
@@ -48,30 +38,13 @@ bool WebCamVJ::onKeyPress(char c) {
             return false;
     }
 
-    setMaxIntensivity(2, 3, 128);
-    setMaxIntensivity(5, 3, 128);
-    setMaxIntensivity(1, 4, 128);
-    setMaxIntensivity(6, 4, 128);
-    setMaxIntensivity(0, 5, 128);
-    setMaxIntensivity(7, 5, 128);
+    setMaxIntensivity(0, 3, 255);
+    setMaxIntensivity(7, 3, 255);
 
-    setMaxIntensivity(0, 0, 128);
-    setMaxIntensivity(7, 0, 128);
-
-    setMaxIntensivity(3, 0, 255);
     setMaxIntensivity(4, 0, 255);
 
-    INTESITY(2, 3);
-    INTESITY(5, 3);
-    INTESITY(1, 4);
-    INTESITY(6, 4);
-    INTESITY(0, 5);
-    INTESITY(7, 5);
-
-    INTESITY(0, 0);
-    INTESITY(7, 0);
-
-    INTESITY(3, 0);
+    INTESITY(0, 3);
+    INTESITY(7, 3);
     INTESITY(4, 0);
 
     show(getFrame());
