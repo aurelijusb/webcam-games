@@ -124,10 +124,36 @@ void BubbleShot::paintBubbles() {
     }
 }
 
-
+static const string scoreTexts[] = {
+    "_",
+    "hibernate",
+    "await",
+    "promise",
+    "yeld",
+    "substr",
+    "Behat",
+    "Doctrine",
+    "Symfony",
+    "VilniusPHP",
+    "VilniusPHP",
+    "Laravel",
+    "Composer",
+    "PHPUnit",
+    "strlen",
+    "protected",
+    "compile",
+    "monad",
+    "coroutine",
+    "npm",
+    "maven",
+};
 
 void BubbleShot::drawScore() {
+    if (released < 1) {
+        return;
+    }
     int score256 = (int) ((double) exploded / released * 128);
+    int score20 = (int) ((double) exploded / released * 20);
     CvScalar color = CV_RGB(255 - score256, score256 + 128, score256 + 128);
     CvFont fontScore;
     double hScale=0.5;
@@ -142,12 +168,13 @@ void BubbleShot::drawScore() {
     int x = (int) (canvas->width / (double) released * exploded);
     int width = 40;
     int height = 10;
-    cvPutText(canvas, "Half", cvPoint(x - width/2, height), &fontWord, color);
 
+    string scoreText = scoreTexts[score20];
+    cvPutText(canvas, scoreTexts[score20].c_str(), cvPoint(x - width/2, height), &fontWord, color);
 
     if (released > 0) {
         double score = exploded / (double) released;
-        if (0.4 < score && score < 0.6) {
+        if (0.3 < score && score < 0.7) {
             drawHappySmile(color, 20, 20);
         } else {
             drawSadSmile(color, 20, 20);
