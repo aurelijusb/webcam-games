@@ -129,21 +129,11 @@ void BubbleShot::paintBubbles() {
 void BubbleShot::drawScore() {
     int score256 = (int) ((double) exploded / released * 128);
     CvScalar color = CV_RGB(255 - score256, score256 + 128, score256 + 128);
-    CvFont font;
-    double hScale=0.5;
-    double vScale=0.5;
-    int    lineWidth=1;
-    cvInitFont(&font,CV_FONT_HERSHEY_SIMPLEX|CV_FONT_ITALIC, hScale, vScale,
-               0, lineWidth);
-    cvPutText(canvas, IntToString(released), cvPoint(20, 20), &font, color);
-    cvPutText(canvas, IntToString(exploded), cvPoint(canvas->width - 80, 20), &font, color);
-
     int x = (int) (canvas->width / (double) released * exploded);
     int width = 40;
     int height = 5;
     cvRectangle(canvas, cvPoint(x - width/2, 0), cvPoint(x + width/2, height), color, CV_FILLED, 8, 0);
     cvLine(canvas, cvPoint(x, height / 2), cvPoint(canvas->width / 2, height / 2), color, 1, 8, 0);
-
 
     if (released > 0) {
         double score = exploded / (double) released;
