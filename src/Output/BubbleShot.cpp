@@ -20,6 +20,7 @@ BubbleShot::BubbleShot(int webCamDevice): TrackerDifference(webCamDevice) {
     canvas = NULL;
     timer = 0;
     released = 0;
+    lastExploded = 0;
     exploded = 0;
 }
 
@@ -129,11 +130,18 @@ void BubbleShot::paintBubbles() {
 void BubbleShot::drawScore() {
     int score256 = (int) ((double) exploded / released * 128);
     CvScalar color = CV_RGB(255 - score256, score256 + 128, score256 + 128);
+    CvScalar colorBoom = CV_RGB(255, 255, 255);
+    if (lastExploded != exploded) {
+        color = colorBoom;
+    }
     int x = (int) (canvas->width / (double) released * exploded);
     int width = 40;
     int height = 5;
-    cvRectangle(canvas, cvPoint(x - width/2, 0), cvPoint(x + width/2, height), color, CV_FILLED, 8, 0);
     cvLine(canvas, cvPoint(x, height / 2), cvPoint(canvas->width / 2, height / 2), color, 1, 8, 0);
+    cvRectangle(canvas, cvPoint(x - width/2, 0), cvPoint(x + width/2, height), exploded == lastExploded ? color : colorBoom, CV_FILLED, 8, 0);
+    int direction = (exploded / (double) released) > 0.5 ? 1 : -1;
+    cvLine(canvas, cvPoint(canvas->width / 2 + (height * direction), 0), cvPoint(canvas->width / 2, height / 2), color, 1, 8, 0);
+    cvLine(canvas, cvPoint(canvas->width / 2 + (height * direction), height), cvPoint(canvas->width / 2, height / 2), color, 1, 8, 0);
 
     if (released > 0) {
         double score = exploded / (double) released;
@@ -143,6 +151,8 @@ void BubbleShot::drawScore() {
             drawSadSmile(color, 20, 20);
         }
     }
+
+    lastExploded = exploded;
 }
 
 void BubbleShot::drawHappySmile(const CvScalar& color, int top, int size) {

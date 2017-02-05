@@ -30,6 +30,7 @@ private:
     int timer;
     int released;
     int exploded;
+    int lastExploded;
 
     void drawHappySmile(const CvScalar &color, int top, int size);
 
