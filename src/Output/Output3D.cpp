@@ -37,8 +37,12 @@ void Output3D::initialiseGlut() {
 void Output3D::initialiseOpenGl() {
     glEnable(GL_DEPTH_TEST);
     initialiseOpenGlLights();
-    initialiseModel("../Data/", "untitled.obj");
-    
+    initialiseModel("../Data/", "v02.obj");
+    initialiseModel("../Data/", "v02-left.obj");
+    initialiseModel("../Data/", "v02-right.obj");
+    initialiseModel("../Data/", "v02-happy.obj");
+    initialiseModel("../Data/", "v02-sad.obj");
+
     glMatrixMode(GL_PROJECTION);
     openGlPerspective(45.0f, (GLfloat) windowWidth / (GLfloat) windowHeight,
                       0.8, 100);
@@ -48,11 +52,15 @@ void Output3D::initialiseOpenGl() {
 
 void Output3D::initialiseOpenGlLights() {
     lightAmbient = new GLfloat[4];
-    lightAmbient[0] = lightAmbient[1] = lightAmbient[2] = lightAmbient[3] = 0.1;
+    lightAmbient[0] = lightAmbient[1] = lightAmbient[2] = lightAmbient[3] = 0.4;
     
     lightDiffuse = new GLfloat[4];
-    lightDiffuse[0] = lightDiffuse[1] = lightDiffuse[2] = lightDiffuse[3] = 1;
-    
+    lightDiffuse[0] = 171 / 255.0f;
+    lightDiffuse[1] = 27 / 255.0f;
+    lightDiffuse[2] = 147 / 255.0f;
+    lightDiffuse[3] = 1;
+
+
     lightPosition = new GLfloat[4];
     lightPosition[0] = lightPosition[1] = 1;
     lightPosition[2] = 5;

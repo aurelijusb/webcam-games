@@ -20,8 +20,8 @@ WebCamVJ::WebCamVJ(int webCamDevice): TrackerMotion(webCamDevice) {
 
 void WebCamVJ::run() {
     setFlip();
-    add(0, 3, image, "../Data/img_1449.jpg");
-    add(7, 3, image, "../Data/img_1196.jpg");
+    add(0, 3, image, "../Data/IMG_8836.JPG");
+    add(7, 3, image, "../Data/IMG_8981.JPG");
     
     add(4, 0, rectangules, "");
 
