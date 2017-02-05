@@ -182,10 +182,10 @@ void BubbleShot::addBubbles() {
     timer++;
     if (timer % 14 == 0) {
         bubbles.push_back(new Bubble(sourceX, sourceY, firstSize, firstSize));
-        bubbles.push_back(new Bubble(frame->width / 8, sourceY, firstSize,
-                                     firstSize));
-        bubbles.push_back(new Bubble(frame->width / 8 * 3, sourceY, firstSize,
-                                     firstSize));
+        bubbles.push_back(new Bubble(frame->width / 6 * 1, sourceY, firstSize, firstSize));
+        bubbles.push_back(new Bubble(frame->width / 6 * 2, sourceY, firstSize, firstSize));
+        bubbles.push_back(new Bubble(frame->width / 6 * 4, sourceY, firstSize, firstSize));
+        bubbles.push_back(new Bubble(frame->width / 6 * 5, sourceY, firstSize, firstSize));
         released += 3;
     }
     if (timer > 100) {
